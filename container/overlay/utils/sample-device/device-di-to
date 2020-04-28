@@ -1,0 +1,13 @@
+#!/bin/bash
+
+# Setup application.properties for DI
+cp application.properties.aio application.properties
+./device
+
+#Wait for 10 seconds to complete TO0 scheduling
+sleep 10
+
+# Get the latest voucher and setup application properties for TO
+voucher=$(ls -t creds/saved | head -1)
+echo "org.sdo.device.credentials=creds/saved/$voucher" >> application.properties
+./device

@@ -1,0 +1,16 @@
+[Unit]
+Description=Sdo All-In-One services
+After=network.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+User=aio
+WorkingDirectory=/home/aio/bin
+SystemLogIdentifier=aio
+ExecStart=/home/aio/bin/catalina.sh run
+
+[Install]
+WantedBy=multi-user.target

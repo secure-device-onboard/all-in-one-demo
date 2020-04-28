@@ -1,0 +1,22 @@
+# Copyright 2020 Intel Corporation
+# SPDX-License-Identifier: Apache 2.0
+
+version: "2.4"
+
+services:
+
+  aio-demo:
+    image: aio-demo
+    container_name: aio-demo
+    expose:
+      - "8080"
+    ports:
+      - "8080:8080"
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - _JAVA_OPTIONS
+    environment:
+      - "_JAVA_OPTIONS=${_JAVA_OPTIONS}"
+    network_mode: host

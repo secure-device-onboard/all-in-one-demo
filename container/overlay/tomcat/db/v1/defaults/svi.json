@@ -1,0 +1,38 @@
+[
+  {
+    "module": "sdo_sys",
+    "msg": "filedesc",
+    "valueLen": -1,
+    "valueId": "payload_name",
+    "enc": "base64"
+  },
+  {
+    "module": "sdo_sys",
+    "msg": "write",
+    "valueLen": -1,
+    "valueId": "payload.bin",
+    "enc": "base64"
+  },
+  {
+    "module": "sdo_sys",
+    "msg": "filedesc",
+    "valueLen": -1,
+    "valueId": "package_name",
+    "enc": "base64"
+  },
+  {
+    "module": "sdo_sys",
+    "msg": "write",
+    "valueLen": -1,
+    "valueId": "package.sh",
+    "enc": "base64"
+  },
+  {
+    "module": "sdo_sys",
+    "msg": "exec",
+    "valueLen": -1,
+    "valueId": "sh-linux64",
+    "enc": "base64"
+  }
+]
+   
