@@ -1,9 +1,13 @@
 # About
 
-The Secure Device Onboard (SDO) All-In-One demo is designed to run SDO Manufacturer service, SDO IoT
-Platform SDK Service and SDO Rendezvous Service within a single instance of tomcat server. The
-purpose of this demo is to fast-track demonstration of Secure Device Onboard protocol using
-different client implementations.
+The Secure Device Onboard All-In-One demo is designed to run different Secure Device Onboard
+services like Manufacturer, IoT Platform SDK Service and Rendezvous Service within a single
+instance of tomcat server. The purpose of this demo is to fast-track demonstration of Secure
+Device Onboard protocol using different client implementations.
+
+This is an example implementation to demonstrate out-of-box execution of these components.
+Appropriate security measures with respect to key-store management and configuration management
+should be considerd while performing production deployment using the components.
 
 # Getting started with the SDO All-In-One Demo
 
