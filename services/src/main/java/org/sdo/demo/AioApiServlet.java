@@ -215,7 +215,7 @@ public class AioApiServlet extends HttpServlet {
       if (isMethodAllow(req.getMethod())) {
         AsyncContext asyncCtx = req.startAsync();
 
-        asyncCtx.setTimeout(9000);
+        asyncCtx.setTimeout(0);
 
         if (req.getMethod().equals("PUT")) {
           new Thread(() -> putAsync(asyncCtx)).start();
