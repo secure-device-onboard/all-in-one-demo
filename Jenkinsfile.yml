@@ -4,16 +4,17 @@ node('ubuntu18.04-OnDemand'){
         'REPO_PRI=https://github.com/secure-device-onboard/pri',
         'REPO_SCT=https://github.com/secure-device-onboard/supply-chain-tools',
         'REPO_IOT=https://github.com/secure-device-onboard/iot-platform-sdk',
-        'REPO_AIO=https://github.com/secure-device-onboard/all-in-one-demo',
         ])
   {
 
     stage('Clone all-in-one-demo'){
       cleanWs()
+      dir('all-in-one-demo'){
+        checkout scm
+      }
       sh 'git clone "${REPO_PRI}"'
       sh 'git clone "${REPO_SCT}"'
       sh 'git clone "${REPO_IOT}"'
-      sh 'git clone "${REPO_AIO}"'
     }
 
     stage('Build all-in-one-demo'){
