@@ -15,7 +15,6 @@ node('ubuntu18.04-OnDemand'){
       sh 'git clone "${REPO_PRI}"'
       sh 'git clone "${REPO_SCT}"'
       sh 'git clone "${REPO_IOT}"'
-      sh 'git clone "${REPO_AIO}"'
     }
 
     stage('Build all-in-one-demo'){
