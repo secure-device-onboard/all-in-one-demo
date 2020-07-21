@@ -17,7 +17,7 @@
   </parent>
 
   <properties>
-    <rendezvous.war>rendezvous-1.9-SNAPSHOT.war</rendezvous.war>
+    <rendezvous.war>rendezvous-service-1.9.war</rendezvous.war>
     <manufacturer.war>manufacturer-webapp-1.9-SNAPSHOT.war</manufacturer.war>
     <to0service.war>to0serviceimpl-1.9-SNAPSHOT.war</to0service.war>
     <ops.war>opsimpl-1.9-SNAPSHOT.war</ops.war>
@@ -28,9 +28,9 @@
 
   <dependencies>
     <dependency>
-      <groupId>org.sdo</groupId>
-      <artifactId>rendezvous</artifactId>
-      <version>1.9-SNAPSHOT</version>
+      <groupId>org.sdo.rendezvous</groupId>
+      <artifactId>rendezvous-service</artifactId>
+      <version>1.9</version>
       <type>war</type>
     </dependency>
 

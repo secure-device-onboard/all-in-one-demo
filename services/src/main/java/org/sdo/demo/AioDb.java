@@ -87,10 +87,8 @@ public class AioDb implements AutoCloseable {
       StringBuilder builder = new StringBuilder();
       builder.append("http://");
       builder.append(dns);
-      if (port != null) {
-        builder.append(":");
-        builder.append(port);
-      }
+      builder.append(":");
+      builder.append("8001");
       System.out.println("setting rv " + builder.toString());
       setRvInfo(builder.toString());
     }
