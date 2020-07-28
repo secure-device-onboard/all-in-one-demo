@@ -5,9 +5,7 @@ services like Manufacturer, IoT Platform SDK Service and Rendezvous Service with
 instance of tomcat server. The purpose of this demo is to fast-track demonstration of Secure
 Device Onboard protocol using different client implementations.
 
-This is an example implementation to demonstrate out-of-box execution of these components.
-Appropriate security measures with respect to key-store management and configuration management
-should be considerd while performing production deployment using the components.
+**NOTE**: The All-In-One demo is provided solely to demonstrate out-of-box operation of Secure Device Onboard components. _This demo is not recommended for use in any production capacity._  Appropriate security measures with respect to key-store management and configuration management should be considered while performing production deployment of any Secure Device Onboard component.
 
 # Getting started with the SDO All-In-One Demo
 
