@@ -4,9 +4,7 @@ node('ubuntu18.04-OnDemand'){
         'REPO_PRI=https://github.com/secure-device-onboard/pri',
         'REPO_SCT=https://github.com/secure-device-onboard/supply-chain-tools',
         'REPO_IOT=https://github.com/secure-device-onboard/iot-platform-sdk',
-        "TEST_DIR=${WORKSPACE}/sdo-test",
-        "MANUFACTURER_DB_CONNECT_STRING=jdbc:mariadb://127.0.0.1:3306/sdo",
-        "RESELLER_DB_CONNECT_STRING=jdbc:mariadb://127.0.0.1:4306/sdo"
+        "TEST_DIR=${WORKSPACE}/sdo-test"
         ])
   {
 
