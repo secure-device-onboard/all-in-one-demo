@@ -4,6 +4,9 @@ node('ubuntu18.04-OnDemand'){
         'REPO_PRI=https://github.com/secure-device-onboard/pri',
         'REPO_SCT=https://github.com/secure-device-onboard/supply-chain-tools',
         'REPO_IOT=https://github.com/secure-device-onboard/iot-platform-sdk',
+        "TEST_DIR=${WORKSPACE}/sdo-test",
+        "MANUFACTURER_DB_CONNECT_STRING=jdbc:mariadb://127.0.0.1:3306/sdo",
+        "RESELLER_DB_CONNECT_STRING=jdbc:mariadb://127.0.0.1:4306/sdo"
         ])
   {
 
@@ -24,6 +27,48 @@ node('ubuntu18.04-OnDemand'){
       sh 'cd $WORKSPACE/all-in-one-demo; mvn clean install'
       print "Archive the artifacts"
       archiveArtifacts artifacts: 'all-in-one-demo/container/target/aio.tar.gz', fingerprint: true, allowEmptyArchive: false
+    }
+    
+    try{
+      stage('Run SmokeTest'){
+        checkout([$class: 'GitSCM', branches: [[name: '*/master']], extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'sdo-test']], userRemoteConfigs: [[credentialsId: 'sdo-automationgithubtoken', url: 'https://github.com/secure-device-onboard-ci/sdo-test']]])
+        sh '''
+          mkdir -p sdo-test/binaries/pri
+          mkdir -p sdo-test/binaries/all-in-one-demo
+          mkdir -p sdo-test/binaries/client-sdk/x86_ecdsa256_sct_bin
+          mkdir -p sdo-test/binaries/client-sdk/x86_ecdsa384_sct_bin
+        '''
+        print "copying the dependent binaries from pri and client-sdk"
+        copyArtifacts filter: 'demo.tar.gz', fingerprintArtifacts: true, projectName: 'pri/master', selector: lastSuccessful(), target: 'sdo-test/binaries/pri/'
+        copyArtifacts excludes: 'SmokeTest_Log.tar.gz', fingerprintArtifacts: true, projectName: 'client-sdk/master', selector: lastSuccessful(), target: 'sdo-test/binaries/'
+        print "Extract the dependent binaries to respective folders"
+        sh '''
+          tar -xvzf sdo-test/binaries/pri/demo.tar.gz -C sdo-test/binaries/pri/ --strip=1
+        '''
+        print "Copy client-sdk artifacts to sdo-test/binaries folder"
+        sh '''
+          tar -xvzf sdo-test/binaries/client-sdk/x86_ecdsa256_c_sct_bin.tar.gz -C sdo-test/binaries/client-sdk/x86_ecdsa256_sct_bin/ --strip=1
+          tar -xvzf sdo-test/binaries/client-sdk/x86_ecdsa384_c_sct_bin.tar.gz -C sdo-test/binaries/client-sdk/x86_ecdsa384_sct_bin/ --strip=1
+        '''
+        print "Copy aio artifacts to sdo-test/binaries folder"
+        sh '''
+          cp -r all-in-one-demo/container/target/aio.tar.gz sdo-test/binaries/all-in-one-demo
+          tar -xvf sdo-test/binaries/all-in-one-demo/aio.tar.gz -C sdo-test/binaries/all-in-one-demo/ --strip=1
+        '''  
+        print "AIO smoke Tests with client-sdk Device PRI Device"
+        sh '''
+          cd sdo-test
+          mvn clean verify -Dgroups=aio_smoketest
+        '''
+      }
+    } finally {
+        print "Archive the smoke test logs "
+        sh 'mkdir SmokeTest_Log'
+        sh '''
+          cp -r sdo-test/logs/*_log.txt SmokeTest_Log/
+          tar -zcvf SmokeTest_Log.tar.gz SmokeTest_Log
+        '''
+        archiveArtifacts artifacts: 'SmokeTest_Log.tar.gz', fingerprint: true, allowEmptyArchive: false
     }
   }
 }
