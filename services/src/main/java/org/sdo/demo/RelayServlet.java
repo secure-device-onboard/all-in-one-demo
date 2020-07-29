@@ -53,6 +53,12 @@ public class RelayServlet extends HttpServlet {
       webapp = "ROOT";
     }
 
+    if (webapp.equals("8001")) {
+      System.out.println("Using OnPremRV");
+      final String onPremUrl = "http://localhost:8001";
+      return onPremUrl;
+    }
+
     String apiUrl = System.getProperty("rest.api.server");
     if (apiUrl == null) {
       apiUrl = "http://localhost:8080";

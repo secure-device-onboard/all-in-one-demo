@@ -36,7 +36,7 @@
     <servlet-class>org.sdo.demo.RelayServlet</servlet-class>
     <init-param>
       <param-name>forward-to</param-name>
-      <param-value>rps</param-value>
+      <param-value>8001</param-value>
     </init-param>
     <async-supported>true</async-supported>
 </servlet>

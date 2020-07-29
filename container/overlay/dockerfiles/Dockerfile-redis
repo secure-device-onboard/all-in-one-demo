@@ -1,0 +1,14 @@
+# Copyright 2020 Intel Corporation
+
+FROM redis:latest
+
+# Copy Files
+COPY ./dockerfiles/hashlist.redis /usr/local/
+COPY ./dockerfiles/startRedis.sh /usr/local/
+
+# Start Service
+ENTRYPOINT ["sh", "/usr/local/startRedis.sh"]
+
+# Docker image helathcheck
+
+HEALTHCHECK --interval=30s --timeout=30s CMD ["redis-cli", "ping"] || exit 1

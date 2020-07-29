@@ -18,6 +18,7 @@
 
   <properties>
     <rendezvous.war>rendezvous-1.9-SNAPSHOT.war</rendezvous.war>
+    <rvservice.war>rendezvous-service-1.9.war</rvservice.war>
     <manufacturer.war>manufacturer-webapp-1.9-SNAPSHOT.war</manufacturer.war>
     <to0service.war>to0serviceimpl-1.9-SNAPSHOT.war</to0service.war>
     <ops.war>opsimpl-1.9-SNAPSHOT.war</ops.war>
@@ -31,6 +32,13 @@
       <groupId>org.sdo</groupId>
       <artifactId>rendezvous</artifactId>
       <version>1.9-SNAPSHOT</version>
+      <type>war</type>
+    </dependency>
+
+    <dependency>
+      <groupId>org.sdo.rendezvous</groupId>
+      <artifactId>rendezvous-service</artifactId>
+      <version>1.9</version>
       <type>war</type>
     </dependency>
 
@@ -144,6 +152,13 @@
                   </fileset>
                 </unwar>
 
+                <echo message="unwar webapps" />
+                <unwar dest="${project.build.directory}/deploy/aio/tomcat/webapps/rv">
+                  <fileset dir="${project.build.directory}/dependencies">
+                    <include name="${rvservice.war}"/>
+                  </fileset>
+                </unwar>
+
                 <unwar dest="${project.build.directory}/deploy/aio/tomcat/webapps/mfs">
                   <fileset dir="${project.build.directory}/dependencies">
                     <include name="${manufacturer.war}"/>
@@ -184,6 +199,14 @@
 
                 <delete includeEmptyDirs="true">
                   <fileset dir="${project.build.directory}/deploy/aio/tomcat/webapps/rps/META-INF"/>
+                </delete>
+
+                <delete includeEmptyDirs="true">
+                  <fileset dir="${project.build.directory}/deploy/aio/tomcat/webapps/rv/org"/>
+                </delete>
+
+                <delete includeEmptyDirs="true">
+                  <fileset dir="${project.build.directory}/deploy/aio/tomcat/webapps/rv/META-INF"/>
                 </delete>
 
                 <delete includeEmptyDirs="true">
