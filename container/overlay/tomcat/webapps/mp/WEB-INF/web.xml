@@ -30,7 +30,9 @@
     </init-param>
     <async-supported>true</async-supported>
   </servlet>
-  
+
+<!-- Set param-value to "rps" for using PRI Rendezvous service.
+     Set param-value to "8001" for using On-Prem Rendezvous-Service. -->
   <servlet>
     <servlet-name>rpsmap</servlet-name>
     <servlet-class>org.sdo.demo.RelayServlet</servlet-class>
