@@ -9,6 +9,6 @@ COPY ./dockerfiles/startRedis.sh /usr/local/
 # Start Service
 ENTRYPOINT ["sh", "/usr/local/startRedis.sh"]
 
-# Docker image helathcheck
+# Docker image healthcheck
 
 HEALTHCHECK --interval=30s --timeout=30s CMD ["redis-cli", "ping"] || exit 1

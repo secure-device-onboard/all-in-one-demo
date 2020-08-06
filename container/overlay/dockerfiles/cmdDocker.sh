@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright 2019 Intel Corporation
+# Copyright 2020 Intel Corporation
 # SPDX-License-Identifier: Apache 2.0
 
 SSL_KEY_STORE="rendezvous-keystore.jks"
