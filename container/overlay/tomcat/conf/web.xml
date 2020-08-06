@@ -110,11 +110,11 @@
   <!--                       that RFC 7233 clarified that Range headers are -->
   <!--                       only valid for GET requests. [true]            -->
 
-   <listener>
-     <listener-class>org.sdo.demo.AioContextListener</listener-class>
-     <listener-class>org.apache.commons.fileupload.servlet.FileCleanerCleanup</listener-class>
-   </listener>
-  
+    <listener>
+        <listener-class>org.sdo.demo.AioContextListener</listener-class>
+        <listener-class>org.apache.commons.fileupload.servlet.FileCleanerCleanup</listener-class>
+    </listener>
+
     <servlet>
         <servlet-name>default</servlet-name>
         <servlet-class>org.apache.catalina.servlets.DefaultServlet</servlet-class>
@@ -127,7 +127,7 @@
             <param-value>false</param-value>
         </init-param>
         <load-on-startup>1</load-on-startup>
-      <async-supported>true</async-supported>
+        <async-supported>true</async-supported>
     </servlet>
 
 
@@ -508,6 +508,7 @@
         <filter-class>org.apache.catalina.filters.HttpHeaderSecurityFilter</filter-class>
         <async-supported>true</async-supported>
     </filter>
+
 
   <!-- A filter that sets character encoding that is used to decode -->
   <!-- parameters in a POST request -->
