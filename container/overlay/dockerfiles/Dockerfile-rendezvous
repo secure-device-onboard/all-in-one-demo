@@ -1,0 +1,29 @@
+# Copyright 2020 Intel Corporation
+# SPDX-License-Identifier: Apache 2.0
+
+FROM ubuntu:18.04
+RUN apt-get update && apt-get install -y openjdk-11-jdk
+RUN apt-get install -y wget
+
+# Create a user 'sdouser'. If the user name is updated, please update the same
+# in cmdDocker.sh.
+
+RUN useradd -ms /bin/bash sdouser
+USER sdouser
+WORKDIR /home/sdouser/
+RUN mkdir ./certs
+
+# Copy dependencies to container
+
+COPY ./tomcat/lib/rendezvous-service* /home/sdouser
+COPY ./dockerfiles/cmdDocker.sh /home/sdouser
+COPY ./dockerfiles/certs/ /home/sdouser/certs
+
+# Start service
+
+EXPOSE 8001
+ENTRYPOINT ["sh", "cmdDocker.sh"]
+
+# Docker image healthcheck
+
+HEALTHCHECK --interval=30s --timeout=30s CMD wget --spider -Y off http://localhost:8001/mp/113/health || exit 1 

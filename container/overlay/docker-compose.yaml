@@ -5,6 +5,56 @@ version: "2.4"
 
 services:
 
+  redis:
+    image: redis
+    container_name: redis
+    command: redis-server
+    expose:
+      - "6379"
+    ports:
+      - "6379:6379"
+    build:
+      context: .
+      dockerfile: ./dockerfiles/Dockerfile-redis
+    restart: on-failure:5
+    network_mode: host
+    healthcheck:
+      test: ["CMD", "redis-cli","ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    cpu_shares: 5
+    mem_limit: 50m
+    mem_reservation: 10m
+    pids_limit: 100
+
+  u-rendezvous-service:
+    image: rendezvous-service:1.9
+    container_name: rendezvous-service
+    expose:
+      - "8001"
+    ports:
+      - "8000:8000"
+      - "8001:8001"
+    build:
+      context: .
+      dockerfile: ./dockerfiles/Dockerfile-rendezvous
+    restart: on-failure:5
+    network_mode: host
+    healthcheck:
+      test: wget --spider -Y off http://localhost:8001/mp/113/health || exit 1
+      interval: 1m
+      timeout: 30s
+      retries: 1
+    cpu_shares: 5
+    mem_limit: 500m
+    mem_reservation: 200m
+    environment:
+      - _JAVA_OPTIONS=${_JAVA_OPTIONS}
+    env_file:
+      - ./dockerfiles/rendezvous.env
+    pids_limit: 100
+
   aio-demo:
     image: aio-demo
     container_name: aio-demo
