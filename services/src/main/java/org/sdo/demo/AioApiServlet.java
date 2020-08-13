@@ -114,12 +114,16 @@ public class AioApiServlet extends HttpServlet {
 
   protected void deleteDirectory(HttpServletRequest req, HttpServletResponse res, Path path) {
     File dir = path.toFile();
-
-    File[] files = dir.listFiles();
-    for (File file : files) {
-      file.delete();
+    try {
+      File[] files = dir.listFiles();
+      for (File file : files) {
+        file.delete();
+      }
+      dir.delete();
+    } catch (NullPointerException e) {
+      e.printStackTrace();
+      res.setStatus(500);
     }
-    dir.delete();
   }
 
   protected void copyFile(HttpServletRequest req, HttpServletResponse res, Path path) {
