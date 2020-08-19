@@ -1,8 +1,8 @@
 # About
 
 The Secure Device Onboard All-In-One demo is designed to run different Secure Device Onboard
-services like Manufacturer, IoT Platform SDK Service and Rendezvous Service within a single
-instance of tomcat server. The purpose of this demo is to fast-track demonstration of Secure
+services like Manufacturer, IoT Platform SDK Service and Rendezvous Service from a single
+**docker-compose** instance. The purpose of this demo is to fast-track demonstration of Secure
 Device Onboard protocol using different client implementations.
 
 **NOTE**: The All-In-One demo is provided solely to demonstrate out-of-box operation of Secure Device Onboard components. _This demo is not recommended for use in any production capacity._  Appropriate security measures with respect to key-store management and configuration management should be considered while performing production deployment of any Secure Device Onboard component.
@@ -20,11 +20,11 @@ The following are the system constraints for the All-in-One demo.
 
 # Configuring JAVA execution environment
 
-Appropriate proxy configuration should be updated in _JAVA_OPTIONS environment variable.
+Appropriate proxy configuration should be updated in **`_JAVA_OPTIONS`** environment variable.(Mandatory, if you are working behind a proxy.)
 
 # Directory structure
 
-The all-in-one-demo repository is structured into following 2 fodlers.
+The all-in-one-demo repository is structured into following 2 folders.
 * `services` : The implementation for All-In-One demo services, which includes messages redirection
   as well automatic extension of vouchers and scheduling TO0 requests for them.
 
@@ -41,6 +41,8 @@ The All-In-One demo is dependent on following repositories.
 
 * `supply-chain-tools` : https://github.com/secure-device-onboard/supply-chain-tools
 
+* `rendezvous-service` : https://github.com/secure-device-onboard/rendezvous-service
+
 These repositories should be built using 'mvn clean install' command on the host machine before
 building all-in-one-demo repository using following command.
 
@@ -48,7 +50,14 @@ building all-in-one-demo repository using following command.
 mvn clean install
 ```
 
-After successful build, the demo package is available at container/target/aio.tar.gz.
+Alternatively, you have to option to build All-in-One demo using Docker.[Read more](build/README.md)
+
+```
+cd build/
+docker-compose up --build
+```
+
+After successful build, the demo package is available at container/demo/aio.tar.gz.
 
 # Running the SDO All-In-One Demo
 
