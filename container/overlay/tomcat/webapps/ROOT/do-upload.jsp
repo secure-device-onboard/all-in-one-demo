@@ -29,8 +29,14 @@
 
         ServletFileUpload upload = new ServletFileUpload(factory);
 
-        List fileItems = upload.parseRequest(request);
+        List fileItems = null;
+        try {
+          fileItems = upload.parseRequest(request);
+        } catch (FileUploadException e) {
+          e.printStackTrace();
+        }
 
+        assert fileItems != null;
         Iterator items = fileItems.iterator();
 
         while (items.hasNext()) {
@@ -41,7 +47,11 @@
             boolean isInMemory = item.isInMemory();
             long sizeInBytes = item.getSize();
             File file = new File( filePath) ;
-            item.write( file ) ;
+            try {
+              item.write( file ) ;
+            } catch (Exception e) {
+              e.printStackTrace();
+            }
             out.println("Uploaded File: " + fileName + "<br>");
           }
         }
