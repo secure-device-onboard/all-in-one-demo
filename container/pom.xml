@@ -25,6 +25,7 @@
     <ocs.war>ocsfs-1.9-SNAPSHOT.war</ocs.war>
     <tomcat.folder>apache-tomcat-9.0.37</tomcat.folder>
     <tomcat.url>https://archive.apache.org/dist/tomcat/tomcat-9/v9.0.37/bin/apache-tomcat-9.0.37.zip</tomcat.url>
+    <project.demo.directory>../demo</project.demo.directory>
   </properties>
 
   <dependencies>
@@ -254,7 +255,7 @@
                 <mkdir dir="${project.build.directory}/deploy/aio/tomcat/db/v1/devices"/>
 
                 <echo message="tar aio" />
-                <tar tarfile="${project.build.directory}/aio.tar.gz"
+                <tar tarfile="${project.demo.directory}/aio.tar.gz"
                   basedir="${project.build.directory}/deploy"
                   longfile="gnu"
                   compression="gzip" />

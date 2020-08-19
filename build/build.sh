@@ -45,7 +45,7 @@ if [ "$use_remote" = "1" ]; then
   cd /tmp/all-in-one-demo/
   git checkout $REPO_BRANCH
   mvn clean install
-  cp -r ./container/target/ /home/sdouser/all-in-one-demo/container/
+  cp -r ./demo/aio.tar.gz /home/sdouser/all-in-one-demo/demo/
 else
   echo "Building local copy"
   cd /home/sdouser/all-in-one-demo/

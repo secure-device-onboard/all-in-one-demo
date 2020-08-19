@@ -24,7 +24,7 @@ node('ubuntu18.04-OnDemand'){
       sh 'cd $WORKSPACE/supply-chain-tools; mvn clean install'
       sh 'cd $WORKSPACE/all-in-one-demo; mvn clean install'
       print "Archive the artifacts"
-      archiveArtifacts artifacts: 'all-in-one-demo/container/target/aio.tar.gz', fingerprint: true, allowEmptyArchive: false
+      archiveArtifacts artifacts: 'all-in-one-demo/demo/aio.tar.gz', fingerprint: true, allowEmptyArchive: false
     }
     
     try{
@@ -50,7 +50,7 @@ node('ubuntu18.04-OnDemand'){
         '''
         print "Copy aio artifacts to sdo-test/binaries folder"
         sh '''
-          cp -r all-in-one-demo/container/target/aio.tar.gz sdo-test/binaries/all-in-one-demo
+          cp -r all-in-one-demo/demo/aio.tar.gz sdo-test/binaries/all-in-one-demo
           tar -xvf sdo-test/binaries/all-in-one-demo/aio.tar.gz -C sdo-test/binaries/all-in-one-demo/ --strip=1
         '''  
         print "AIO smoke Tests with client-sdk Device PRI Device"
