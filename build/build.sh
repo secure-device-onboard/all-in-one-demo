@@ -15,14 +15,16 @@ REPO_PRI=https://github.com/secure-device-onboard/pri.git
 REPO_IOT=https://github.com/secure-device-onboard/iot-platform-sdk.git
 REPO_SCT=https://github.com/secure-device-onboard/supply-chain-tools.git
 REPO_AIO=https://github.com/secure-device-onboard/all-in-one-demo.git
+REPO_RV=https://github.com/secure-device-onboard/rendezvous-service.git
 
-# The same branch will be used to build other SDO components( PRI, IOT & SCT).
+# The same branch will be used to build other SDO components( PRI, IOT, RV & SCT).
 REPO_BRANCH=master
 
 cd /home/sdouser/
 git clone $REPO_IOT
 git clone $REPO_SCT
 git clone $REPO_PRI
+git clone $REPO_RV
 
 cd /home/sdouser/iot-platform-sdk && git checkout $REPO_BRANCH
 mvn clean install
@@ -31,6 +33,9 @@ cd /home/sdouser/supply-chain-tools && git checkout $REPO_BRANCH
 mvn clean install
 
 cd /home/sdouser/pri && git checkout $REPO_BRANCH
+mvn clean install
+
+cd /home/sdouser/rendezvous-service && git checkout $REPO_BRANCH
 mvn clean install
 
 if [ "$use_remote" = "1" ]; then
