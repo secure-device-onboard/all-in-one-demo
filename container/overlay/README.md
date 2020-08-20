@@ -1,7 +1,7 @@
 # About
 
 The Secure Device Onboard (SDO) All-In-One demo is designed to run SDO Manufacturer service, SDO IoT
-Platform SDK Service and SDO Rendezvous Service within a single instance of tomcat server. The
+Platform SDK Service and SDO Rendezvous Service from a single **docker** instance. The
 purpose of this demo is to fast-track demonstration of Secure Device Onboard protocol using
 different client implementations.
 
@@ -21,31 +21,24 @@ Appropriate proxy configuration should be updated in _JAVA_OPTIONS environment v
 
 # Running All-In-One Demo
 
-The All-In-One demo can be executed in a couple of different ways. Once you start the demo, wait
-until all the services (OCS, OPS, TO0Scheduler, Manufacturer and Rendezvous) are initialized. At the
-end of initialization of all services, you will see following statement on console.
+The All-In-One demo can be executed only as a docker service. At the
+end of initialization of all services, you will see following statement on the console.
 
 `Completed Initialization in <Time> ms.`
 
-Follow one of the options below to start All-In-One demo.
+Follow the options below to start All-In-One demo.
 
-## Option-1: Run in shell
+##  Run as docker service
 
-Open a terminal and execute following command.
-
-```
-sh tomcat/bin/catalina.sh run
-```
-
-## Option-2: Run in a docker container
-
-Open a terminal and execute following command.
+Open a terminal, change directory to the root of extracted aio.tar.gz and execute following command.
 
 ```
 docker-compose up --build
 ```
 
 In case you need super user access, prefix 'sudo -E' to above command.
+
+**NOTE :** To support OnDie ECDSA Device attestation, copy the required certificates and crls to tomcat/db/ondiecache folder.
 
 # Running SDO Client
 
@@ -60,8 +53,8 @@ This step assumes that either you have built the [PRI](https://github.com/secure
 source or you have the binaries associated with PRI repo.
 
 The All-In-One demo provides sample configuration files for running PRI Device instance against
-All-In-One demo. The configuration file application.properties.aio and the execution script
-device-di-to is available in utils/sample-device folder. Copy these files into the 'pri/demo/device'
+All-In-One demo. The configuration file **application.properties.aio** and the execution script
+**device-di-to** is available in utils/sample-device folder. **Copy these files** into the 'pri/demo/device'
 folder within PRI repository and execute following command from there.
 
 ```
@@ -72,7 +65,7 @@ bash device-di-to
 When the script 'device-di-to' is executed, the device executes DI and then subsequently TO1 and TO2
 against the SDO services running within All-In-One demo.
 
-After the script exeuction, the status of SDO Client execution is available in result.txt file.
+After the script execution, the status of SDO Client execution is available in result.txt file.
 
 # Configuring All-In-One demo
 
