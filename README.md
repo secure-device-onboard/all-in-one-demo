@@ -2,7 +2,7 @@
 
 The Secure Device Onboard All-In-One demo is designed to run different Secure Device Onboard
 services like Manufacturer, IoT Platform SDK Service and Rendezvous Service from a single
-**docker-compose** instance. The purpose of this demo is to fast-track demonstration of Secure
+**docker** instance. The purpose of this demo is to fast-track demonstration of Secure
 Device Onboard protocol using different client implementations.
 
 **NOTE**: The All-In-One demo is provided solely to demonstrate out-of-box operation of Secure Device Onboard components. _This demo is not recommended for use in any production capacity._  Appropriate security measures with respect to key-store management and configuration management should be considered while performing production deployment of any Secure Device Onboard component.
@@ -20,7 +20,7 @@ The following are the system constraints for the All-in-One demo.
 
 # Configuring JAVA execution environment
 
-Appropriate proxy configuration should be updated in **`_JAVA_OPTIONS`** environment variable.(Mandatory, if you are working behind a proxy.)
+Appropriate proxy configuration should be updated in **`_JAVA_OPTIONS`** environment variable. (Mandatory, if you are working behind a proxy.)
 
 # Directory structure
 
@@ -57,7 +57,7 @@ cd build/
 docker-compose up --build
 ```
 
-After successful build, the demo package is available at container/demo/aio.tar.gz.
+After successful build, the demo package is available at demo/aio.tar.gz.
 
 # Running the SDO All-In-One Demo
 
