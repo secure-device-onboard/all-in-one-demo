@@ -10,14 +10,16 @@ different client implementations.
 The following are the system constraints for the All-in-One demo.
 - Operating System: Ubuntu* 18.04
 - Java* Runtime Environment 11
-- Docker 18.09 (Optional)
-- Docker compose 1.21.2 (Optional)
+- Docker 18.09
+- Docker compose 1.21.2
 - Haveged
 - Postman (Optional) to execute REST calls
 
 # Configuring JAVA execution environment
 
 Appropriate proxy configuration should be updated in _JAVA_OPTIONS environment variable.
+
+Update the proxy information in _JAVA_OPTIONS as ```_JAVA_OPTIONS=-Dhttp.proxyHost=http_proxy_host -Dhttp.proxyPort=http_proxy_port -Dhttps.proxyHost=https_proxy_host -Dhttps.proxyPort=https_proxy_port```.
 
 # Running All-In-One Demo
 
