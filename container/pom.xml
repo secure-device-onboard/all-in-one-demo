@@ -6,23 +6,23 @@
 
   <groupId>org.sdo.aio</groupId>
   <artifactId>container</artifactId>
-  <version>1.9-SNAPSHOT</version>
+  <version>1.9</version>
   <packaging>pom</packaging>
 
   <parent>
     <groupId>org.sdo</groupId>
     <artifactId>aio</artifactId>
-    <version>1.9-SNAPSHOT</version>
+    <version>1.9</version>
     <relativePath>..</relativePath>
   </parent>
 
   <properties>
-    <rendezvous.war>rendezvous-1.9-SNAPSHOT.war</rendezvous.war>
+    <rendezvous.war>rendezvous-1.9.war</rendezvous.war>
     <rvservice.war>rendezvous-service-1.9.war</rvservice.war>
-    <manufacturer.war>manufacturer-webapp-1.9-SNAPSHOT.war</manufacturer.war>
-    <to0service.war>to0serviceimpl-1.9-SNAPSHOT.war</to0service.war>
-    <ops.war>opsimpl-1.9-SNAPSHOT.war</ops.war>
-    <ocs.war>ocsfs-1.9-SNAPSHOT.war</ocs.war>
+    <manufacturer.war>manufacturer-webapp-1.9.war</manufacturer.war>
+    <to0service.war>to0serviceimpl-1.9.war</to0service.war>
+    <ops.war>opsimpl-1.9.war</ops.war>
+    <ocs.war>ocsfs-1.9.war</ocs.war>
     <tomcat.folder>apache-tomcat-9.0.37</tomcat.folder>
     <tomcat.url>https://archive.apache.org/dist/tomcat/tomcat-9/v9.0.37/bin/apache-tomcat-9.0.37.zip</tomcat.url>
     <project.demo.directory>../demo</project.demo.directory>
@@ -32,7 +32,7 @@
     <dependency>
       <groupId>org.sdo</groupId>
       <artifactId>rendezvous</artifactId>
-      <version>1.9-SNAPSHOT</version>
+      <version>1.9</version>
       <type>war</type>
     </dependency>
 
@@ -46,28 +46,28 @@
     <dependency>
       <groupId>org.sdo.sct</groupId>
       <artifactId>manufacturer-webapp</artifactId>
-      <version>1.9-SNAPSHOT</version>
+      <version>1.9</version>
       <type>war</type>
     </dependency>
 
     <dependency>
       <groupId>org.sdo.iotplatformsdk.to0service</groupId>
       <artifactId>to0serviceimpl</artifactId>
-      <version>1.9-SNAPSHOT</version>
+      <version>1.9</version>
       <type>war</type>
     </dependency>
 
     <dependency>
       <groupId>org.sdo.iotplatformsdk.ocs</groupId>
       <artifactId>ocsfs</artifactId>
-      <version>1.9-SNAPSHOT</version>
+      <version>1.9</version>
       <type>war</type>
     </dependency>
 
     <dependency>
       <groupId>org.sdo.iotplatformsdk.ops</groupId>
       <artifactId>opsimpl</artifactId>
-      <version>1.9-SNAPSHOT</version>
+      <version>1.9</version>
       <type>war</type>
     </dependency>
 
@@ -75,7 +75,7 @@
     <dependency>
       <groupId>org.sdo.demo</groupId>
       <artifactId>services</artifactId>
-      <version>1.9-SNAPSHOT</version>
+      <version>1.9</version>
     </dependency>
 
     <!-- https://mvnrepository.com/artifact/commons-fileupload/commons-fileupload -->
