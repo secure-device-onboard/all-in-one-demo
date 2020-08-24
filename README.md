@@ -5,7 +5,7 @@ services like Manufacturer, IoT Platform SDK Service and Rendezvous Service from
 **docker** instance. The purpose of this demo is to fast-track demonstration of Secure
 Device Onboard protocol using different client implementations.
 
-**NOTE**: The All-In-One demo is provided solely to demonstrate out-of-box operation of Secure Device Onboard components. _This demo is not recommended for use in any production capacity._  Appropriate security measures with respect to key-store management and configuration management should be considered while performing production deployment of any Secure Device Onboard component.
+***NOTE***: The All-In-One demo is provided solely to demonstrate out-of-box operation of Secure Device Onboard components. _This demo is not recommended for use in any production capacity._  Appropriate security measures with respect to key-store management and configuration management should be considered while performing production deployment of any Secure Device Onboard component.
 
 # Getting started with the SDO All-In-One Demo
 
@@ -18,7 +18,7 @@ The following are the system constraints for the All-in-One demo.
 - Docker compose 1.21.2
 - Haveged
 
-# Configuring JAVA execution environment
+# Configuring JAVA Execution Environment
 
 Appropriate proxy configuration should be updated in **`_JAVA_OPTIONS`** environment variable. (Mandatory, if you are working behind a proxy.)
 
