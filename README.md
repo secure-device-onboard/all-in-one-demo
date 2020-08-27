@@ -7,7 +7,7 @@ Device Onboard protocol using different client implementations.
 
 **NOTE**: The All-In-One demo is provided solely to demonstrate out-of-box operation of Secure Device Onboard components. _This demo is not recommended for use in any production capacity._  Appropriate security measures with respect to key-store management and configuration management should be considered while performing production deployment of any Secure Device Onboard component.
 
-# Getting started with the SDO All-In-One Demo
+# Getting Started with the SDO All-In-One Demo
 
 The following are the system constraints for the All-in-One demo.
 - Operating System: Ubuntu* 18.04
