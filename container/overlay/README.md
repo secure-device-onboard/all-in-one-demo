@@ -5,7 +5,7 @@ Platform SDK Service and SDO Rendezvous Service from a single **docker** instanc
 purpose of this demo is to fast-track demonstration of Secure Device Onboard protocol using
 different client implementations.
 
-# Getting started with the SDO All-In-One Demo
+# Getting Started with the SDO All-In-One Demo
 
 The following are the system constraints for the All-in-One demo.
 - Operating System: Ubuntu* 18.04
@@ -15,7 +15,7 @@ The following are the system constraints for the All-in-One demo.
 - Haveged
 - Postman (Optional) to execute REST calls
 
-# Configuring JAVA execution environment
+# Configuring JAVA Execution Environment
 
 Appropriate proxy configuration should be updated in _JAVA_OPTIONS environment variable.
 
@@ -30,7 +30,7 @@ end of initialization of all services, you will see following statement on the c
 
 Follow the options below to start All-In-One demo.
 
-##  Run as docker service
+##  Run as Docker Service
 
 Open a terminal, change directory to the root of extracted aio.tar.gz and execute following command.
 
@@ -40,7 +40,7 @@ docker-compose up --build
 
 In case you need super user access, prefix 'sudo -E' to above command.
 
-**NOTE :** To support OnDie ECDSA Device attestation, copy the required certificates and crls to tomcat/db/ondiecache folder.
+***NOTE :*** To support OnDie ECDSA Device attestation, copy the required certificates and crls to tomcat/db/ondiecache folder.
 
 # Running SDO Client
 
@@ -69,7 +69,7 @@ against the SDO services running within All-In-One demo.
 
 After the script execution, the status of SDO Client execution is available in result.txt file.
 
-# Configuring All-In-One demo
+# Configuring All-In-One Demo
 
 All-In-One demo provides REST interfaces, which allows All-In-One demo administrator to update the
 configuration parameters as well as upload/download vouchers and payload files.
@@ -94,15 +94,15 @@ credentials (username: 'aio', password: 'Sm9@wojk').
 | `DELETE`  | /api/v1/values/{file}         | YES    | Delete {file} from the values folder                                           |
 | `GET`     | /api/v1/values/{file}         | YES    | Get the payload specified by {file}                                            |
 
-## Configuring All-In-One demo for remote SDO Client
+## Configuring All-In-One Demo for Remote SDO Client
 
 While executing a SDO Client from a different machine, you would need to change the IP address for
 Rendezvous service. The configuration can be changed by updating redirect.properties file. The
 example commands to perform the executions are provided below.
 
-### Step-1: Create a redirect.properties file
+### Step-1: Create a redirect.properties File
 
-Create a text file called 'redirect.properties' and copy following contents.
+Create a text file called 'redirect.properties' and copy the following contents.
 
 ```
 # DNS of the Owner Protocol Service.
@@ -115,9 +115,9 @@ ip={host-ip-address}
 port=8080
 ```
 
-The {host-ip-address} should be updated with actual IP address of host machine.
+The {host-ip-address} should be updated with the actual IP address of the host machine.
 
-### Step-2: Upload redirect.properties file
+### Step-2: Upload redirect.properties File
 
 Upload the generated redirect.properties file using following REST API call.
 
