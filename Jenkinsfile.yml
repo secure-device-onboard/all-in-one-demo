@@ -4,6 +4,7 @@ node('ubuntu18.04-OnDemand'){
         'REPO_PRI=https://github.com/secure-device-onboard/pri',
         'REPO_SCT=https://github.com/secure-device-onboard/supply-chain-tools',
         'REPO_IOT=https://github.com/secure-device-onboard/iot-platform-sdk',
+        'REPO_RV=https://github.com/secure-device-onboard/rendezvous-service',
         "TEST_DIR=${WORKSPACE}/sdo-test"
         ])
   {
@@ -16,12 +17,14 @@ node('ubuntu18.04-OnDemand'){
       sh 'git clone "${REPO_PRI}"'
       sh 'git clone "${REPO_SCT}"'
       sh 'git clone "${REPO_IOT}"'
+      sh 'git clone "${REPO_RV}"'
     }
 
     stage('Build all-in-one-demo'){
       sh 'cd $WORKSPACE/pri; mvn clean install'
       sh 'cd $WORKSPACE/iot-platform-sdk; mvn clean install'
       sh 'cd $WORKSPACE/supply-chain-tools; mvn clean install'
+      sh 'cd $WORKSPACE/rendezvous-service; mvn clean install'
       sh 'cd $WORKSPACE/all-in-one-demo; mvn clean install'
       print "Archive the artifacts"
       archiveArtifacts artifacts: 'all-in-one-demo/demo/aio.tar.gz', fingerprint: true, allowEmptyArchive: false
