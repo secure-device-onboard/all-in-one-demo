@@ -32,6 +32,8 @@ import java.util.UUID;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLParameters;
 import org.apache.tomcat.util.IntrospectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * AioDb Provides database access and configuration logic.
@@ -39,6 +41,7 @@ import org.apache.tomcat.util.IntrospectionUtils;
 public class AioDb implements AutoCloseable {
 
   private Connection conn = null;
+  private static Logger logger = LoggerFactory.getLogger(AioDb.class);
 
   /**
    * Extract the property value based on key name.
@@ -64,17 +67,17 @@ public class AioDb implements AutoCloseable {
       URI resolved = pwd.resolve(new URI(redirectFile));
       redirectUri = resolved.normalize();
     } catch (URISyntaxException e) {
-      e.printStackTrace();
+      logger.error("Unable to resolve RV URI");
     }
 
     Properties properties = new Properties();
     try (InputStream in = new FileInputStream(new File(redirectUri))) {
       properties.load(in);
     } catch (FileNotFoundException e) {
-      e.printStackTrace();
+      logger.error("redirect.properties file not found");
       throw new SQLException(e);
     } catch (IOException e) {
-      e.printStackTrace();
+      logger.error("Error reading the redirect.properties file.");
       throw new SQLException(e);
     }
 
@@ -91,7 +94,7 @@ public class AioDb implements AutoCloseable {
         builder.append(":");
         builder.append(port);
       }
-      System.out.println("setting rv " + builder.toString());
+      logger.info("setting rv " + builder.toString());
       setRvInfo(builder.toString());
     }
   }
@@ -110,9 +113,9 @@ public class AioDb implements AutoCloseable {
       System.out.println(sql);
       int affected = stmt.executeUpdate(sql);
       if (affected > 0) {
-        System.out.println(affected + " rows affected");
+        logger.info(affected + " rows affected");
       }
-      System.out.println();
+      logger.info("\n");
     }
   }
 
@@ -183,6 +186,7 @@ public class AioDb implements AutoCloseable {
       // STEP 1: Register JDBC driver
       Class.forName(jdbcDriver);
     } catch (ClassNotFoundException e) {
+      logger.error("Unable to connect with H2 database.");
       throw new SQLException(e);
     }
 
@@ -292,9 +296,9 @@ public class AioDb implements AutoCloseable {
       System.out.println(sql);
       int affected = stmt.executeUpdate(sql);
       if (affected > 0) {
-        System.out.println(affected + " rows affected");
+        logger.info(affected + " rows affected");
       }
-      System.out.println();
+      logger.info("\n");
     }
   }
 
