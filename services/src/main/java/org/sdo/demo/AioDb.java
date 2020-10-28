@@ -137,7 +137,7 @@ public class AioDb implements AutoCloseable {
     return result;
   }
 
-  private String getUuidFromVoucher(String voucherString) {
+  protected String getUuidFromVoucher(String voucherString) {
 
     String uuidString = "";
 
