@@ -24,6 +24,8 @@ services:
       - no_proxy=${no_proxy}
       - use_remote=${use_remote}
 
+    security_opt:
+      - no-new-privileges
     mem_limit: 2000m
     mem_reservation: 1000m
     cpu_shares: 5

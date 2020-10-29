@@ -28,6 +28,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * AioApiServet Handles authenticated API rest calls for owner files.
@@ -36,6 +38,8 @@ public class AioApiServlet extends HttpServlet {
 
   public static final String REST_API_USERNAME = "rest.api.username";
   public static final String REST_API_PASSWORD = "rest.api.password";
+
+  private static Logger logger = LoggerFactory.getLogger(AioApiServlet.class);
 
   protected boolean checkCredentials(HttpServletRequest req, HttpServletResponse res) {
     final String userParam = System.getProperty(REST_API_USERNAME);
@@ -75,7 +79,7 @@ public class AioApiServlet extends HttpServlet {
       db.connect();
       db.setRvInfo();
     } catch (SQLException e) {
-      e.printStackTrace();
+      logger.error("Unable to Sync with H2 Database.");
     }
   }
 
@@ -121,7 +125,7 @@ public class AioApiServlet extends HttpServlet {
       }
       dir.delete();
     } catch (NullPointerException e) {
-      e.printStackTrace();
+      logger.error("File not found. Unable to delete the file.");
       res.setStatus(500);
     }
   }
@@ -133,6 +137,7 @@ public class AioApiServlet extends HttpServlet {
       Files.copy(inStream, path, StandardCopyOption.REPLACE_EXISTING);
       IOUtils.closeQuietly(inStream);
     } catch (IOException e) {
+      logger.error("Error in copying the file from request stream.");
       res.setStatus(500);
     }
   }
@@ -148,7 +153,7 @@ public class AioApiServlet extends HttpServlet {
 
         IOUtils.closeQuietly(outStream);
       } catch (IOException e) {
-        e.printStackTrace();
+        logger.error("Error in copying the file from response stream.");
         res.setStatus(500);
       }
     } else {
@@ -174,7 +179,7 @@ public class AioApiServlet extends HttpServlet {
         out.write(nl);
       }
     } catch (IOException e) {
-      e.printStackTrace();
+      logger.error("Unable to perform getFiles operation.");
       res.setStatus(500);
     }
   }
@@ -197,7 +202,7 @@ public class AioApiServlet extends HttpServlet {
         out.write(nl);
       }
     } catch (IOException e) {
-      e.printStackTrace();
+      logger.error("Unable to perform getUUID operation");
       res.setStatus(500);
     }
   }

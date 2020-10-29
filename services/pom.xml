@@ -24,7 +24,7 @@
   </parent>
 
   <properties>
-    <tomcat.version>9.0.37</tomcat.version>
+    <tomcat.version>9.0.39</tomcat.version>
   </properties>
 
   <dependencies>
@@ -33,6 +33,19 @@
       <groupId>com.h2database</groupId>
       <artifactId>h2</artifactId>
       <version>1.4.200</version>
+    </dependency>
+
+    <!-- https://mvnrepository.com/artifact/org.json/json -->
+    <dependency>
+      <groupId>org.json</groupId>
+      <artifactId>json</artifactId>
+      <version>20200518</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <version>1.7.30</version>
     </dependency>
 
     <dependency>

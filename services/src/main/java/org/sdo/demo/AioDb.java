@@ -22,9 +22,11 @@ import java.nio.file.StandardCopyOption;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.time.Duration;
 import java.util.Base64;
 import java.util.Properties;
@@ -32,6 +34,10 @@ import java.util.UUID;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLParameters;
 import org.apache.tomcat.util.IntrospectionUtils;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * AioDb Provides database access and configuration logic.
@@ -39,6 +45,7 @@ import org.apache.tomcat.util.IntrospectionUtils;
 public class AioDb implements AutoCloseable {
 
   private Connection conn = null;
+  private static Logger logger = LoggerFactory.getLogger(AioDb.class);
 
   /**
    * Extract the property value based on key name.
@@ -64,17 +71,17 @@ public class AioDb implements AutoCloseable {
       URI resolved = pwd.resolve(new URI(redirectFile));
       redirectUri = resolved.normalize();
     } catch (URISyntaxException e) {
-      e.printStackTrace();
+      logger.error("Unable to resolve RV URI");
     }
 
     Properties properties = new Properties();
     try (InputStream in = new FileInputStream(new File(redirectUri))) {
       properties.load(in);
     } catch (FileNotFoundException e) {
-      e.printStackTrace();
+      logger.error("redirect.properties file not found");
       throw new SQLException(e);
     } catch (IOException e) {
-      e.printStackTrace();
+      logger.error("Error reading the redirect.properties file.");
       throw new SQLException(e);
     }
 
@@ -91,7 +98,7 @@ public class AioDb implements AutoCloseable {
         builder.append(":");
         builder.append(port);
       }
-      System.out.println("setting rv " + builder.toString());
+      logger.info("setting rv " + builder.toString());
       setRvInfo(builder.toString());
     }
   }
@@ -100,29 +107,18 @@ public class AioDb implements AutoCloseable {
    * Setup Rendezvous Info in Manufacturer.
    */
   public void setRvInfo(String value) throws SQLException {
-    try (Statement stmt = conn.createStatement()) {
-      StringBuilder builder = new StringBuilder();
-      builder.append("UPDATE MT_SERVER_SETTINGS ");
-      builder.append("SET RENDEZVOUS_INFO = '");
-      builder.append(value);
-      builder.append("'");
-      String sql = builder.toString();
-      System.out.println(sql);
-      int affected = stmt.executeUpdate(sql);
+    String sqlQuery = "UPDATE MT_SERVER_SETTINGS SET RENDEZVOUS_INFO = ?";
+    try {
+      PreparedStatement stmt = conn.prepareStatement(sqlQuery);
+      stmt.setString(1, value);
+      int affected = stmt.executeUpdate();
       if (affected > 0) {
-        System.out.println(affected + " rows affected");
+        logger.info(affected + " rows affected");
       }
-      System.out.println();
+      logger.info("\n");
+    } catch (SQLException e) {
+      logger.info("Unable to update the DB with RV details");
     }
-  }
-
-  /**
-   * Get the full filename of given resource.
-   */
-  public File getFile(String name) {
-    String rootDir = getProperty("fs.root.dir");
-    String filesDir = combinePath(rootDir, "files");
-    return new File(combinePath(filesDir, name));
   }
 
   private String combinePath(String path1, String path2) {
@@ -183,6 +179,7 @@ public class AioDb implements AutoCloseable {
       // STEP 1: Register JDBC driver
       Class.forName(jdbcDriver);
     } catch (ClassNotFoundException e) {
+      logger.error("Unable to connect with H2 database.");
       throw new SQLException(e);
     }
 
@@ -214,11 +211,7 @@ public class AioDb implements AutoCloseable {
 
       return response.body();
 
-    } catch (IOException e) {
-      throw new SQLException(e);
-    } catch (InterruptedException e) {
-      throw new SQLException(e);
-    } catch (NoSuchAlgorithmException e) {
+    } catch (IOException | InterruptedException | NoSuchAlgorithmException e) {
       throw new SQLException(e);
     }
   }
@@ -276,26 +269,86 @@ public class AioDb implements AutoCloseable {
    * Extend the voucher for specific Owner.
    */
   public void assignOwner(String serialNo, String customerDescriptor) throws SQLException {
+
+    String sqlQuery = "UPDATE RT_OWNERSHIP_VOUCHER SET CUSTOMER_PUBLIC_KEY_ID = "
+        + "(SELECT CUSTOMER_PUBLIC_KEY_ID FROM RT_CUSTOMER_PUBLIC_KEY "
+        + "WHERE CUSTOMER_DESCRIPTOR = ?) WHERE DEVICE_SERIAL_NO = ?";
+
+    try (PreparedStatement stmt = conn.prepareStatement(sqlQuery)) {
+      stmt.setString(1, customerDescriptor);
+      stmt.setString(2, serialNo);
+      int affected = stmt.executeUpdate();
+      if (affected > 0) {
+        logger.info(affected + " rows affected");
+      }
+      logger.info("\n");
+    }
+  }
+
+  /**
+   * Get information about all devices in the database.
+   *
+   * <p>This method is used in AioInfoServlet.
+   */
+  public String getDevicesInfo() throws SQLException {
+    logger.info("Inside getDevicesInfo()");
+
+    JSONArray list = new JSONArray();
     try (Statement stmt = conn.createStatement()) {
       StringBuilder builder = new StringBuilder();
-      builder.append("UPDATE RT_OWNERSHIP_VOUCHER ");
-      builder.append("SET CUSTOMER_PUBLIC_KEY_ID = ");
-      builder.append("(SELECT CUSTOMER_PUBLIC_KEY_ID ");
-      builder.append("FROM RT_CUSTOMER_PUBLIC_KEY ");
-      builder.append("WHERE CUSTOMER_DESCRIPTOR = '");
-      builder.append(customerDescriptor);
-      builder.append("') ");
-      builder.append("WHERE DEVICE_SERIAL_NO = '");
-      builder.append(serialNo);
-      builder.append("'");
-      String sql = builder.toString();
-      System.out.println(sql);
-      int affected = stmt.executeUpdate(sql);
-      if (affected > 0) {
-        System.out.println(affected + " rows affected");
+      builder.append("SELECT e.DEVICE_SERIAL_NO, e.DI_END_DATETIME, s.UUID ");
+      builder.append("FROM MT_DEVICE_STATE e ");
+      builder.append("JOIN RT_OWNERSHIP_VOUCHER s on e.DEVICE_SERIAL_NO = s.DEVICE_SERIAL_NO");
+
+      try (ResultSet rs = stmt.executeQuery(builder.toString())) {
+        while (rs.next()) {
+          JSONObject obj = new JSONObject();
+          String serialNumber = rs.getString("DEVICE_SERIAL_NO");
+          Timestamp timestamp = rs.getTimestamp("DI_END_DATETIME");
+          obj.put("serial_no", serialNumber);
+          obj.put("timestamp", timestamp.toString());
+          obj.put("uuid", getUuidFromVoucher(getAssignedVoucher(serialNumber)));
+          list.put(obj);
+        }
       }
-      System.out.println();
     }
+
+    return list.toString();
+  }
+
+  /**
+   * Get information about devices those were registered within a given period of time.
+   *
+   * <p>This method is used in AioInfoServlet.
+   */
+  public String getDevicesInfoWithTime(int seconds) throws SQLException {
+
+    JSONArray list = new JSONArray();
+    try (Statement stmt = conn.createStatement()) {
+      StringBuilder builder = new StringBuilder();
+      builder.append("SELECT e.DEVICE_SERIAL_NO, e.DI_END_DATETIME, s.UUID ");
+      builder.append("FROM MT_DEVICE_STATE e ");
+      builder.append("JOIN RT_OWNERSHIP_VOUCHER s on e.DEVICE_SERIAL_NO = s.DEVICE_SERIAL_NO");
+
+      try (ResultSet rs = stmt.executeQuery(builder.toString())) {
+        while (rs.next()) {
+
+          String serialNumber = rs.getString("DEVICE_SERIAL_NO");
+          Timestamp timestamp = rs.getTimestamp("DI_END_DATETIME");
+          Timestamp cur = new Timestamp(System.currentTimeMillis());
+          long diff = cur.getTime() - timestamp.getTime();
+          long diffSeconds = diff / 1000;
+          if (diffSeconds < seconds) {
+            JSONObject obj = new JSONObject();
+            obj.put("serial_no", serialNumber);
+            obj.put("timestamp", timestamp.toString());
+            obj.put("uuid", getUuidFromVoucher(getAssignedVoucher(serialNumber)));
+            list.put(obj);
+          }
+        }
+      }
+    }
+    return list.toString();
   }
 
   /**
@@ -345,7 +398,7 @@ public class AioDb implements AutoCloseable {
     builder.append(Duration.ofSeconds(Long.parseLong(t0ws)).toString());
     builder.append("\"}");
 
-    System.out.println(builder.toString());
+    logger.info(builder.toString());
 
     HttpRequest.Builder reqBuilder = HttpRequest.newBuilder()
         .uri(URI.create(getProperty("to0.rest.api")))
@@ -364,13 +417,10 @@ public class AioDb implements AutoCloseable {
       HttpResponse<String> response =
           hc.send(reqBuilder.build(), HttpResponse.BodyHandlers.ofString());
 
-      System.out.println(response);
+      logger.info(String.valueOf(response));
 
-    } catch (IOException e) {
-      throw new SQLException(e);
-    } catch (InterruptedException e) {
-      throw new SQLException(e);
-    } catch (NoSuchAlgorithmException e) {
+    } catch (IOException | InterruptedException | NoSuchAlgorithmException e) {
+      logger.error("Error Performing TO0");
       throw new SQLException(e);
     }
 

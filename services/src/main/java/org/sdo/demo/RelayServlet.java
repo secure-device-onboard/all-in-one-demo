@@ -23,6 +23,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Relay messages to a specific webapp using rest.api.server property. Listener is notified when url
@@ -32,6 +34,8 @@ public class RelayServlet extends HttpServlet {
 
   public static final java.lang.String FORWARD_TO_PARAM = "forward-to";
   public static final java.lang.String LISTENER_PARAM = "listener";
+
+  private static Logger logger = LoggerFactory.getLogger(RelayServlet.class);
 
   public RelayServlet() {
     super();
@@ -54,7 +58,7 @@ public class RelayServlet extends HttpServlet {
     }
 
     if (webapp.equals("8001")) {
-      System.out.println("Using OnPremRV");
+      logger.info("Using OnPremRV");
       final String onPremUrl = "http://localhost:8001";
       return onPremUrl;
     }
@@ -75,15 +79,15 @@ public class RelayServlet extends HttpServlet {
         return (RelayListener)Class.forName(listenerClass)
           .getDeclaredConstructor().newInstance();
       } catch (InstantiationException e) {
-        e.printStackTrace();
+        logger.error("Unable to create the RelayListener Object.");
       } catch (IllegalAccessException e) {
-        e.printStackTrace();
+        logger.error("IllegalAccess on the RelayListener Object.");
       } catch (InvocationTargetException e) {
-        e.printStackTrace();
+        logger.error("Error with RelayListener object creation");
       } catch (NoSuchMethodException e) {
-        e.printStackTrace();
+        logger.error("Error with RelayListener object creation");
       } catch (ClassNotFoundException e) {
-        e.printStackTrace();
+        logger.error("Unable to find DiListener class.");
       }
 
     }
@@ -105,7 +109,7 @@ public class RelayServlet extends HttpServlet {
     while (headers.hasMoreElements()) {
       String name = headers.nextElement();
       String value = request.getHeader(name);
-      System.out.println("received header " + name + " " + value);
+      logger.info("received header " + name + " " + value);
 
     }
   }
@@ -121,9 +125,9 @@ public class RelayServlet extends HttpServlet {
 
       try {
         builder.setHeader(name, value);
-        System.out.println("forwarding header " + name + " " + value);
+        logger.info("forwarding header " + name + " " + value);
       } catch (java.lang.IllegalArgumentException e) {
-        System.out.println("skipping header " + name);
+        logger.error("skipping header " + name);
         // suppress headers we can't set due to security
       }
     }
@@ -136,7 +140,7 @@ public class RelayServlet extends HttpServlet {
       List<String> values = map.get(key);
       for (String value : values) {
         response.addHeader(key, value);
-        System.out.println("returning header " + key + " " + value);
+        logger.info("returning header " + key + " " + value);
       }
     }
   }
@@ -148,7 +152,7 @@ public class RelayServlet extends HttpServlet {
     printHeaders(request);
 
     String url = getForwardHost() + request.getRequestURI() + getQueryString(request);
-    System.out.println("forwarding to " + url);
+    logger.info("forwarding to " + url);
     RelayListener listener = getListener();
 
     HttpRequest.Builder reqBuilder = HttpRequest.newBuilder().uri(URI.create(url));
@@ -201,6 +205,7 @@ public class RelayServlet extends HttpServlet {
       }
 
     } catch (InterruptedException | NoSuchAlgorithmException e) {
+      logger.error("Error with HTTPclient stream");
       throw new ServletException(e);
     }
   }
