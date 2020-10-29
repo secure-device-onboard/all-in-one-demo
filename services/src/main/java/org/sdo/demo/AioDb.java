@@ -36,6 +36,8 @@ import javax.net.ssl.SSLParameters;
 import org.apache.tomcat.util.IntrospectionUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * AioDb Provides database access and configuration logic.
@@ -43,6 +45,7 @@ import org.json.JSONObject;
 public class AioDb implements AutoCloseable {
 
   private Connection conn = null;
+  private static Logger logger = LoggerFactory.getLogger(AioDb.class);
 
   /**
    * Extract the property value based on key name.
@@ -68,13 +71,17 @@ public class AioDb implements AutoCloseable {
       URI resolved = pwd.resolve(new URI(redirectFile));
       redirectUri = resolved.normalize();
     } catch (URISyntaxException e) {
-      System.out.println("Invalid URI");
+      logger.error("Unable to resolve RV URI");
     }
 
     Properties properties = new Properties();
     try (InputStream in = new FileInputStream(new File(redirectUri))) {
       properties.load(in);
+    } catch (FileNotFoundException e) {
+      logger.error("redirect.properties file not found");
+      throw new SQLException(e);
     } catch (IOException e) {
+      logger.error("Error reading the redirect.properties file.");
       throw new SQLException(e);
     }
 
@@ -91,7 +98,7 @@ public class AioDb implements AutoCloseable {
         builder.append(":");
         builder.append(port);
       }
-      System.out.println("setting rv " + builder.toString());
+      logger.info("setting rv " + builder.toString());
       setRvInfo(builder.toString());
     }
   }
@@ -106,11 +113,11 @@ public class AioDb implements AutoCloseable {
       stmt.setString(1, value);
       int affected = stmt.executeUpdate();
       if (affected > 0) {
-        System.out.println(affected + " rows affected");
+        logger.info(affected + " rows affected");
       }
-      System.out.println();
+      logger.info("\n");
     } catch (SQLException e) {
-      System.out.println("Unable to update the DB with RV details");
+      logger.info("Unable to update the DB with RV details");
     }
   }
 
@@ -172,6 +179,7 @@ public class AioDb implements AutoCloseable {
       // STEP 1: Register JDBC driver
       Class.forName(jdbcDriver);
     } catch (ClassNotFoundException e) {
+      logger.error("Unable to connect with H2 database.");
       throw new SQLException(e);
     }
 
@@ -271,9 +279,9 @@ public class AioDb implements AutoCloseable {
       stmt.setString(2, serialNo);
       int affected = stmt.executeUpdate();
       if (affected > 0) {
-        System.out.println(affected + " rows affected");
+        logger.info(affected + " rows affected");
       }
-      System.out.println();
+      logger.info("\n");
     }
   }
 
@@ -283,7 +291,7 @@ public class AioDb implements AutoCloseable {
    * <p>This method is used in AioInfoServlet.
    */
   public String getDevicesInfo() throws SQLException {
-    System.out.println("Inside getDevicesInfo()");
+    logger.info("Inside getDevicesInfo()");
 
     JSONArray list = new JSONArray();
     try (Statement stmt = conn.createStatement()) {
@@ -390,7 +398,7 @@ public class AioDb implements AutoCloseable {
     builder.append(Duration.ofSeconds(Long.parseLong(t0ws)).toString());
     builder.append("\"}");
 
-    System.out.println(builder.toString());
+    logger.info(builder.toString());
 
     HttpRequest.Builder reqBuilder = HttpRequest.newBuilder()
         .uri(URI.create(getProperty("to0.rest.api")))
@@ -409,10 +417,10 @@ public class AioDb implements AutoCloseable {
       HttpResponse<String> response =
           hc.send(reqBuilder.build(), HttpResponse.BodyHandlers.ofString());
 
-      System.out.println(response);
+      logger.info(String.valueOf(response));
 
     } catch (IOException | InterruptedException | NoSuchAlgorithmException e) {
-      System.out.println("Error Performing TO0");
+      logger.error("Error Performing TO0");
       throw new SQLException(e);
     }
 

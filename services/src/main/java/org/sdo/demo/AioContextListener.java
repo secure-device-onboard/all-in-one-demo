@@ -10,12 +10,15 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import org.apache.tomcat.util.IntrospectionUtils;
 import org.h2.tools.Server;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Listen for startup of Web Apps.
  */
 public class AioContextListener implements ServletContextListener {
   private static boolean dbLoaded;
+  private static Logger logger = LoggerFactory.getLogger(AioContextListener.class);
 
   @Override
   public void contextDestroyed(ServletContextEvent event) {
@@ -26,10 +29,10 @@ public class AioContextListener implements ServletContextListener {
   public void contextInitialized(ServletContextEvent event) {
     if (!dbLoaded) {
       dbLoaded = true;
-      System.out.println("Loading AIO database..");
+      logger.info("Loading AIO database..");
 
       String dbUrl = new AioDb().getProperty("spring.datasource.url");
-      System.out.println(dbUrl);
+      logger.info(dbUrl);
 
       List<String> argList = new ArrayList<String>();
       argList.add("-ifExists");
@@ -45,7 +48,7 @@ public class AioContextListener implements ServletContextListener {
         argList.add("-web");
         argList.add("-webPort");
         argList.add(webParam);
-        System.out.println("adding db web support");
+        logger.info("adding db web support");
       }
 
       final String[] args = new String[argList.size()];
@@ -60,6 +63,7 @@ public class AioContextListener implements ServletContextListener {
           aioDb.setRvInfo();
           maxRetries = 0;
         } catch (SQLException e) {
+          logger.error("Retrying connection with H2 database.");
           maxRetries--;
           try {
             Thread.sleep(1000);
@@ -75,7 +79,7 @@ public class AioContextListener implements ServletContextListener {
     try {
       Server.main(args);
     } catch (SQLException e) {
-      System.out.println(e.getStackTrace());
+      logger.error("Unable to start the H2 database.");
     }
   }
 }
