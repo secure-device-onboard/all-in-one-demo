@@ -89,4 +89,15 @@
     <url-pattern>/v1/files/*</url-pattern>
   </servlet-mapping>
 
+  <servlet>
+    <servlet-name>Devicemap</servlet-name>
+    <servlet-class>org.sdo.demo.AioInfoServlet</servlet-class>
+    <async-supported>true</async-supported>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>Devicemap</servlet-name>
+    <url-pattern>/v1/deviceinfo/*</url-pattern>
+  </servlet-mapping>
+
 </web-app>
