@@ -1,3 +1,6 @@
+// Copyright 2020 Intel Corporation
+// SPDX-License-Identifier: Apache 2.0
+
 package org.sdo.demo;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -13,7 +16,6 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
 class AioApiServletTest {
-
 
   private MockHttpServletRequest request;
   private MockHttpServletResponse response;
@@ -78,7 +80,6 @@ class AioApiServletTest {
         obj.copyFile(request, response, Paths.get("/home")));
   }
 
-
   @Test
   void isMethodAllow() {
     String method ="GET";
@@ -86,6 +87,5 @@ class AioApiServletTest {
     boolean actual = obj.isMethodAllow(method);
     assertEquals(expected, actual);
   }
-
 
 }
