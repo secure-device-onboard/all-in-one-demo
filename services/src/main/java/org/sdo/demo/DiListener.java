@@ -4,15 +4,11 @@
 package org.sdo.demo;
 
 import java.sql.SQLException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * DiListener.
  */
 public class DiListener implements RelayListener {
-
-  private static Logger logger = LoggerFactory.getLogger(DiListener.class);
 
   public DiListener() {
 
@@ -30,7 +26,7 @@ public class DiListener implements RelayListener {
         db.connect();
         db.processDevices();
       } catch (SQLException e) {
-        logger.error("Unable to connect with H2 database.");
+        e.printStackTrace();
       }
     }
   }
