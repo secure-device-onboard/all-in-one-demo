@@ -84,6 +84,18 @@
       <version>1.10-SNAPSHOT</version>
     </dependency>
 
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <version>1.7.30</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-simple</artifactId>
+      <version>1.7.30</version>
+   </dependency>
+
     <!-- https://mvnrepository.com/artifact/commons-fileupload/commons-fileupload -->
     <dependency>
       <groupId>commons-fileupload</groupId>
@@ -197,6 +209,7 @@
                 </delete>
 
                 <delete includeEmptyDirs="true">
+                  <fileset file="${project.build.directory}/deploy/aio/tomcat/webapps/ocs/WEB-INF/lib/slf4j*"/>
                   <fileset dir="${project.build.directory}/deploy/aio/tomcat/webapps/ocs/META-INF"/>
                 </delete>
 
@@ -205,6 +218,7 @@
                 </delete>
 
                 <delete includeEmptyDirs="true">
+                  <fileset file="${project.build.directory}/deploy/aio/tomcat/webapps/rps/WEB-INF/lib/slf4j*"/>
                   <fileset dir="${project.build.directory}/deploy/aio/tomcat/webapps/rps/META-INF"/>
                 </delete>
 
@@ -213,6 +227,7 @@
                 </delete>
 
                 <delete includeEmptyDirs="true">
+                  <fileset file="${project.build.directory}/deploy/aio/tomcat/webapps/rv/WEB-INF/lib/slf4j*"/>
                   <fileset dir="${project.build.directory}/deploy/aio/tomcat/webapps/rv/META-INF"/>
                 </delete>
 
@@ -221,6 +236,7 @@
                 </delete>
 
                 <delete includeEmptyDirs="true">
+                  <fileset file="${project.build.directory}/deploy/aio/tomcat/webapps/mfs/WEB-INF/lib/slf4j*"/>
                   <fileset dir="${project.build.directory}/deploy/aio/tomcat/webapps/mfs/META-INF"/>
                 </delete>
 
@@ -229,6 +245,7 @@
                 </delete>
 
                 <delete includeEmptyDirs="true">
+                  <fileset file="${project.build.directory}/deploy/aio/tomcat/webapps/to0/WEB-INF/lib/slf4j*"/>
                   <fileset dir="${project.build.directory}/deploy/aio/tomcat/webapps/to0/META-INF"/>
                 </delete>
 
@@ -237,6 +254,7 @@
                 </delete>
 
                 <delete includeEmptyDirs="true">
+                  <fileset file="${project.build.directory}/deploy/aio/tomcat/webapps/ops/WEB-INF/lib/slf4j*"/>
                   <fileset dir="${project.build.directory}/deploy/aio/tomcat/webapps/ops/META-INF"/>
                 </delete>
 
