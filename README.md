@@ -10,7 +10,7 @@ Device Onboard protocol using different client implementations.
 # Getting Started with the SDO All-In-One Demo
 
 The following are the system constraints for the All-in-One demo.
-- Operating System: Ubuntu* 18.04
+- Operating System: Ubuntu* 20.04
 - Java* Development Kit 11
 - Apache Maven* 3.5.4 (Optional) software for building the demo from source
 - Java IDE (Optional) for convenience in modifying the source code

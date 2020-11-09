@@ -8,7 +8,7 @@ different client implementations.
 # Getting Started with the SDO All-In-One Demo
 
 The following are the system constraints for the All-in-One demo.
-- Operating System: Ubuntu* 18.04
+- Operating System: Ubuntu* 20.04
 - Java* Runtime Environment 11
 - Docker 18.09
 - Docker compose 1.21.2

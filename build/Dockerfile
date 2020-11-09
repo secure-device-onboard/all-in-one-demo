@@ -1,7 +1,7 @@
 # Copyright 2020 Intel Corporation
 # SPDX-License-Identifier: Apache 2.0
 
-FROM ubuntu:bionic
+FROM ubuntu:20.04
 
 RUN apt-get update && \
     apt-get install -y git  \
