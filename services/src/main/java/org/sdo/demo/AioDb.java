@@ -85,7 +85,7 @@ public class AioDb implements AutoCloseable {
       throw new SQLException(e);
     }
 
-    String port = properties.getProperty("port");
+    final String port = properties.getProperty("port");
     String dns = properties.getProperty("dns");
     if (dns == null) {
       dns = properties.getProperty("ip");
@@ -107,7 +107,7 @@ public class AioDb implements AutoCloseable {
    * Setup Rendezvous Info in Manufacturer.
    */
   public void setRvInfo(String value) throws SQLException {
-    String sqlQuery = "UPDATE MT_SERVER_SETTINGS SET RENDEZVOUS_INFO = ?";
+    final String sqlQuery = "UPDATE MT_SERVER_SETTINGS SET RENDEZVOUS_INFO = ?";
     try {
       PreparedStatement stmt = conn.prepareStatement(sqlQuery);
       stmt.setString(1, value);
@@ -137,12 +137,12 @@ public class AioDb implements AutoCloseable {
 
     String uuidString = "";
 
-    String query = "\"g\":\"";
+    final String query = "\"g\":\"";
     int pos = voucherString.indexOf(query);
     if (pos > 0) {
       int pos2 = voucherString.indexOf("\"", pos + query.length());
       if (pos2 > pos) {
-        String guid = voucherString.substring(pos + query.length(), pos2);
+        final String guid = voucherString.substring(pos + query.length(), pos2);
         byte[] guidData = Base64.getDecoder().decode(guid);
         UUID uuid = getGuidFromByteArray(guidData);
         uuidString = uuid.toString();
@@ -170,10 +170,10 @@ public class AioDb implements AutoCloseable {
    * Setup DB.
    */
   public void connect() throws SQLException {
-    String jdbcDriver = getProperty("spring.datasource.driverClassName");
-    String dbUser = getProperty("spring.datasource.username");
-    String dbPass = getProperty("spring.datasource.password");
-    String dbUrl = getProperty("spring.datasource.url");
+    final String jdbcDriver = getProperty("spring.datasource.driverClassName");
+    final String dbUser = getProperty("spring.datasource.username");
+    final String dbPass = getProperty("spring.datasource.password");
+    final String dbUrl = getProperty("spring.datasource.url");
 
     try {
       // STEP 1: Register JDBC driver
@@ -193,7 +193,7 @@ public class AioDb implements AutoCloseable {
    */
   public String getAssignedVoucher(String serialNumber) throws SQLException {
 
-    String restUrl = combinePath(getProperty("rest.api.server"), "/api/v1/vouchers/")
+    final String restUrl = combinePath(getProperty("rest.api.server"), "/api/v1/vouchers/")
         + serialNumber;
 
     HttpRequest.Builder reqBuilder = HttpRequest.newBuilder().uri(URI.create(restUrl)).GET();
@@ -243,7 +243,7 @@ public class AioDb implements AutoCloseable {
    * Perform operations on Voucher till TO0 operation.
    */
   public void processDevices() throws SQLException {
-    String keyDescription = getOwnerKeyDescription();
+    final String keyDescription = getOwnerKeyDescription();
     try (Statement stmt = conn.createStatement()) {
       StringBuilder builder = new StringBuilder();
       builder.append("SELECT DEVICE_SERIAL_NO, ");
@@ -252,11 +252,11 @@ public class AioDb implements AutoCloseable {
 
       try (ResultSet rs = stmt.executeQuery(builder.toString())) {
         while (rs.next()) {
-          String serialNumber = rs.getString("DEVICE_SERIAL_NO");
+          final String serialNumber = rs.getString("DEVICE_SERIAL_NO");
           rs.getInt("CUSTOMER_PUBLIC_KEY_ID");
           if (rs.wasNull()) {
             assignOwner(serialNumber, keyDescription);
-            String assignedVoucher = getAssignedVoucher(serialNumber);
+            final String assignedVoucher = getAssignedVoucher(serialNumber);
             createOwnerDevice(assignedVoucher);
             performTo0(getUuidFromVoucher(assignedVoucher));
           }
@@ -270,7 +270,7 @@ public class AioDb implements AutoCloseable {
    */
   public void assignOwner(String serialNo, String customerDescriptor) throws SQLException {
 
-    String sqlQuery = "UPDATE RT_OWNERSHIP_VOUCHER SET CUSTOMER_PUBLIC_KEY_ID = "
+    final String sqlQuery = "UPDATE RT_OWNERSHIP_VOUCHER SET CUSTOMER_PUBLIC_KEY_ID = "
         + "(SELECT CUSTOMER_PUBLIC_KEY_ID FROM RT_CUSTOMER_PUBLIC_KEY "
         + "WHERE CUSTOMER_DESCRIPTOR = ?) WHERE DEVICE_SERIAL_NO = ?";
 
@@ -303,7 +303,7 @@ public class AioDb implements AutoCloseable {
       try (ResultSet rs = stmt.executeQuery(builder.toString())) {
         while (rs.next()) {
           JSONObject obj = new JSONObject();
-          String serialNumber = rs.getString("DEVICE_SERIAL_NO");
+          final String serialNumber = rs.getString("DEVICE_SERIAL_NO");
           Timestamp timestamp = rs.getTimestamp("DI_END_DATETIME");
           obj.put("serial_no", serialNumber);
           obj.put("timestamp", timestamp.toString());
@@ -333,7 +333,7 @@ public class AioDb implements AutoCloseable {
       try (ResultSet rs = stmt.executeQuery(builder.toString())) {
         while (rs.next()) {
 
-          String serialNumber = rs.getString("DEVICE_SERIAL_NO");
+          final String serialNumber = rs.getString("DEVICE_SERIAL_NO");
           Timestamp timestamp = rs.getTimestamp("DI_END_DATETIME");
           Timestamp cur = new Timestamp(System.currentTimeMillis());
           long diff = cur.getTime() - timestamp.getTime();
@@ -356,11 +356,11 @@ public class AioDb implements AutoCloseable {
    */
   public void createOwnerDevice(String voucher) throws SQLException {
 
-    String rootDir = getProperty("fs.root.dir");
-    String voucherId = getUuidFromVoucher(voucher);
-    String devicesDir = combinePath(rootDir,
+    final String rootDir = getProperty("fs.root.dir");
+    final String voucherId = getUuidFromVoucher(voucher);
+    final String devicesDir = combinePath(rootDir,
         getProperty("fs.devices.dir"));
-    String deviceDir = combinePath(devicesDir, voucherId);
+    final String deviceDir = combinePath(devicesDir, voucherId);
 
     File file = new File(deviceDir);
     file.mkdir();
@@ -369,10 +369,10 @@ public class AioDb implements AutoCloseable {
       Files.write(Paths.get(combinePath(deviceDir, "voucher.json")), voucherBytes);
       String[] defaults = {"psi.json", "svi.json"};
       for (String fileName : defaults) {
-        String devicePath = combinePath(deviceDir, fileName);
+        final String devicePath = combinePath(deviceDir, fileName);
         String defaultPath = combinePath(rootDir, "v1");
         defaultPath = combinePath(defaultPath, "defaults");
-        String defaultFile = combinePath(defaultPath, fileName);
+        final String defaultFile = combinePath(defaultPath, fileName);
         Files.copy(new File(defaultFile).toPath(), new File(devicePath).toPath(),
             StandardCopyOption.REPLACE_EXISTING);
       }
@@ -387,7 +387,7 @@ public class AioDb implements AutoCloseable {
    */
   public void performTo0(String voucherId) throws SQLException {
 
-    String t0ws = getProperty("to0.waitseconds");
+    final String t0ws = getProperty("to0.waitseconds");
 
     StringBuilder builder = new StringBuilder();
     builder.append("{\"guids\":[\"");

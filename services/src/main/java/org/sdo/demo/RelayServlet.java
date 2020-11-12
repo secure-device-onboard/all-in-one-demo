@@ -72,7 +72,7 @@ public class RelayServlet extends HttpServlet {
   }
 
   private RelayListener getListener() {
-    String listenerClass = getInitParameter(LISTENER_PARAM);
+    final String listenerClass = getInitParameter(LISTENER_PARAM);
 
     if (listenerClass != null) {
       try {
@@ -107,8 +107,8 @@ public class RelayServlet extends HttpServlet {
     Enumeration<String> headers = request.getHeaderNames();
 
     while (headers.hasMoreElements()) {
-      String name = headers.nextElement();
-      String value = request.getHeader(name);
+      final String name = headers.nextElement();
+      final String value = request.getHeader(name);
       logger.info("received header " + name + " " + value);
 
     }
@@ -119,8 +119,8 @@ public class RelayServlet extends HttpServlet {
     Enumeration<String> headers = request.getHeaderNames();
 
     while (headers.hasMoreElements()) {
-      String name = headers.nextElement();
-      String value = request.getHeader(name);
+      final String name = headers.nextElement();
+      final String value = request.getHeader(name);
       //skip restricted header names
 
       try {
@@ -151,7 +151,7 @@ public class RelayServlet extends HttpServlet {
 
     printHeaders(request);
 
-    String url = getForwardHost() + request.getRequestURI() + getQueryString(request);
+    final String url = getForwardHost() + request.getRequestURI() + getQueryString(request);
     logger.info("forwarding to " + url);
     RelayListener listener = getListener();
 
