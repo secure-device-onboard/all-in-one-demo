@@ -46,9 +46,11 @@ public class AioFilesServlet extends AioApiServlet {
     List<String> list = getPathElements(req.getRequestURI());
     if (list.size() > 2 && list.get(0).equals("api") && list.get(1).equals("v1")) {
       if (list.get(2).equals("files") && list.size() > 3) {
+        String fileName = list.get(3);
         Path filePath = Paths.get(fsRootDir, fsFilesDir, list.get(3));
-        copyFile(filePath, res);
-
+        if (checkFileNameSanity(fileName) && pathTraversalCheck(filePath)) {
+          copyFile(filePath, res);
+        }
       } else {
         res.setStatus(404);
       }

@@ -18,8 +18,10 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
+import java.util.regex.Pattern;
 import javax.servlet.AsyncContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
@@ -114,6 +116,43 @@ public class AioApiServlet extends HttpServlet {
       result = path.substring(0, pos);
     }
     return result;
+  }
+
+  /**
+   *  Basic Path Traversal check.
+   */
+  public static boolean pathTraversalCheck(Path path) {
+    String homeDir = new AioDb().getProperty("fs.root.dir");
+    if (!(path.toString().contains("..")) && path.normalize().startsWith(homeDir)) {
+      return true;
+    }
+    logger.error("Invalid path");
+    return false;
+  }
+
+  /**
+   * Basic sanity check on the filename.
+   */
+  public boolean checkFileNameSanity(String filename) {
+    final int maxFileNameLength = Integer.parseInt(new AioDb().getProperty("filename.maxlength"));
+    final String simpleFileNamePattern = "^[a-zA-Z0-9,.!?_\\-]+$";
+
+    Pattern patternForSimpleString = Pattern
+        .compile(simpleFileNamePattern, Pattern.CASE_INSENSITIVE);
+
+    boolean checkFileName =
+        patternForSimpleString.matcher(filename).find();
+
+    if (!checkFileName) {
+      logger.error("Invalid filename");
+      return false;
+    }
+
+    if (filename.length() > maxFileNameLength) {
+      logger.error("Invalid file name length");
+      return false;
+    }
+    return true;
   }
 
   protected void deleteDirectory(HttpServletRequest req, HttpServletResponse res, Path path) {
@@ -258,22 +297,37 @@ public class AioApiServlet extends HttpServlet {
     if (list.size() > 2 && list.get(0).equals("api") && list.get(1).equals("v1")) {
       if (list.get(2).equals("values")) {
         if (list.size() > 3) {
-          Path filePath = Paths.get(fsRootDir, fsValuesDir, list.get(3));
-          copyFile(filePath, res);
+          String fileName = list.get(3);
+          Path filePath = Paths.get(fsRootDir, fsValuesDir, fileName);
+          if (checkFileNameSanity(fileName) && pathTraversalCheck(filePath)) {
+            copyFile(filePath, res);
+          }
         } else if (list.size() == 3) {
-          getFiles(Paths.get(fsRootDir, fsValuesDir), res);
+          Path filePath = Paths.get(fsRootDir, fsValuesDir);
+          if (pathTraversalCheck(filePath)) {
+            getFiles(filePath, res);
+          }
         }
       } else if (list.get(2).equals("devices")) {
         if (list.size() > 4) {
           String uuid = list.get(3);
           String fileName = list.get(4);
           Path filePath = Paths.get(fsRootDir, fsDevicesDir, uuid, fileName);
-          copyFile(filePath, res);
+          if (checkFileNameSanity(fileName) && pathTraversalCheck(filePath)) {
+            copyFile(filePath, res);
+          }
         } else if (list.size() == 3) {
-          getUuids(Paths.get(fsRootDir, fsDevicesDir), res);
+          Path filePath = Paths.get(fsRootDir, fsDevicesDir);
+          if (pathTraversalCheck(filePath)) {
+            getUuids(filePath, res);
+          }
+
         }
       } else if (list.get(2).equals("uploads") && list.size() == 3) {
-        getFiles(Paths.get(fsRootDir, fsFilesDir), res);
+        Path filePath = Paths.get(fsRootDir, fsFilesDir);
+        if (pathTraversalCheck(filePath)) {
+          getFiles(filePath, res);
+        }
       } else {
         res.setStatus(404);
       }
@@ -300,22 +354,32 @@ public class AioApiServlet extends HttpServlet {
     List<String> list = getPathElements(req.getRequestURI());
     if (list.size() > 2 && list.get(0).equals("api") && list.get(1).equals("v1")) {
       if (list.get(2).equals("uploads") && list.size() > 3) {
-        Path filePath = Paths.get(fsRootDir, fsFilesDir, list.get(3));
-        filePath.toFile().delete();
+        String fileName = list.get(3);
+        Path filePath = Paths.get(fsRootDir, fsFilesDir, fileName);
+        if (checkFileNameSanity(fileName) && pathTraversalCheck(filePath)) {
+          filePath.toFile().delete();
+        }
       } else if (list.get(2).equals("values") && list.size() > 3) {
+        String fileName = list.get(3);
         Path filePath = Paths.get(fsRootDir, fsValuesDir, list.get(3));
-        filePath.toFile().delete();
+        if (checkFileNameSanity(fileName) && pathTraversalCheck(filePath)) {
+          filePath.toFile().delete();
+        }
 
       } else if (list.get(2).equals("devices")) {
         if (list.size() > 4) {
           String uuid = list.get(3);
           String fileName = list.get(4);
           Path filePath = Paths.get(fsRootDir, fsDevicesDir, uuid, fileName);
-          filePath.toFile().delete();
+          if (checkFileNameSanity(fileName) && pathTraversalCheck(filePath)) {
+            filePath.toFile().delete();
+          }
         } else if (list.size() > 3) {
           String uuid = list.get(3);
           Path filePath = Paths.get(fsRootDir, fsDevicesDir, uuid);
-          deleteDirectory(req, res, filePath);
+          if (pathTraversalCheck(filePath)) {
+            deleteDirectory(req, res, filePath);
+          }
         } else {
           res.setStatus(404);
         }
@@ -344,13 +408,17 @@ public class AioApiServlet extends HttpServlet {
     List<String> list = getPathElements(req.getRequestURI());
     if (list.size() > 2 && list.get(0).equals("api") && list.get(1).equals("v1")) {
       if (list.get(2).equals("uploads") && list.size() > 3) {
-        Path filePath = Paths.get(fsRootDir, fsFilesDir, list.get(3));
-        copyFile(req, res, filePath);
+        String fileName = list.get(3);
+        Path filePath = Paths.get(fsRootDir, fsFilesDir, fileName);
+        if (checkFileNameSanity(fileName) && pathTraversalCheck(filePath)) {
+          copyFile(req, res, filePath);
+        }
       } else if (list.get(2).equals("values") && list.size() > 3) {
         String fileName = list.get(3);
         Path filePath = Paths.get(fsRootDir, fsValuesDir, fileName);
-        copyFile(req, res, filePath);
-
+        if (checkFileNameSanity(fileName) && pathTraversalCheck(filePath)) {
+          copyFile(req, res, filePath);
+        }
         if (fileName.equals("redirect.properties")) {
           syncDatabase();
         }
@@ -362,7 +430,9 @@ public class AioApiServlet extends HttpServlet {
         if (!guidDir.exists()) {
           guidDir.mkdir();
         }
-        copyFile(req, res, filePath);
+        if (checkFileNameSanity(fileName) && pathTraversalCheck(filePath)) {
+          copyFile(req, res, filePath);
+        }
       } else {
         res.setStatus(404);
       }
