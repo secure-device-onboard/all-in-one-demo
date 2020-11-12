@@ -134,8 +134,7 @@ public class AioApiServlet extends HttpServlet {
    * Basic sanity check on the filename.
    */
   public boolean checkFileNameSanity(String filename) {
-    final int maxFileNameLength = 64;
-    final String[] acceptableFileFormat = {".properties", ".sh", ".bin", ".json"};
+    final int maxFileNameLength = Integer.parseInt(new AioDb().getProperty("filename.maxlength"));
     final String simpleFileNamePattern = "^[a-zA-Z0-9,.!?_\\-]+$";
 
     Pattern patternForSimpleString = Pattern
@@ -146,12 +145,6 @@ public class AioApiServlet extends HttpServlet {
 
     if (!checkFileName) {
       logger.error("Invalid filename");
-      return false;
-    }
-
-    if (Arrays.stream(acceptableFileFormat).noneMatch(
-        validExtension -> filename.endsWith(validExtension))) {
-      logger.error("Invalid file extension");
       return false;
     }
 
