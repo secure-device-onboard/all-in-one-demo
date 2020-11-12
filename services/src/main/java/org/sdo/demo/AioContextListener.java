@@ -31,19 +31,19 @@ public class AioContextListener implements ServletContextListener {
       dbLoaded = true;
       logger.info("Loading AIO database..");
 
-      String dbUrl = new AioDb().getProperty("spring.datasource.url");
+      final String dbUrl = new AioDb().getProperty("spring.datasource.url");
       logger.info(dbUrl);
 
       List<String> argList = new ArrayList<String>();
       argList.add("-ifExists");
-      String tcpParam = new AioDb().getProperty("db.tcp.port");
+      final String tcpParam = new AioDb().getProperty("db.tcp.port");
       if (tcpParam != null && !tcpParam.isEmpty()) {
         argList.add("-tcp");
         argList.add("-tcpPort");
         argList.add(tcpParam);
       }
 
-      String webParam = new AioDb().getProperty("db.web.port");
+      final String webParam = new AioDb().getProperty("db.web.port");
       if (webParam != null && !webParam.isEmpty()) {
         argList.add("-web");
         argList.add("-webPort");

@@ -9,8 +9,12 @@ import java.util.List;
 import javax.servlet.AsyncContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class AioInfoServlet extends AioApiServlet {
+
+  private static Logger logger = LoggerFactory.getLogger(AioInfoServlet.class);
 
   @Override
   protected boolean isMethodAllow(String method) {
@@ -32,7 +36,7 @@ public class AioInfoServlet extends AioApiServlet {
       HttpServletResponse res = (HttpServletResponse) asyncCtx.getResponse();
 
       List<String> list = getPathElements(req.getRequestURI());
-      System.out.println(list.toString());
+      logger.info(list.toString());
       if (list.size() > 3) {
         try {
           int pollTime = Integer.parseInt(list.get(3));
@@ -46,9 +50,9 @@ public class AioInfoServlet extends AioApiServlet {
           out.print(db.getDevicesInfoWithTime(pollTime));
           db.close();
         } catch (NumberFormatException e) {
-          System.out.println("Invalid poll time. Couldn't fetch device information.");
+          logger.error("Invalid poll time. Couldn't fetch device information.");
         } catch (Exception e) {
-          System.out.println("Unable to retrieve Device Information.");
+          logger.error("Unable to retrieve Device Information.");
         }
       } else {
         try {
@@ -59,12 +63,12 @@ public class AioInfoServlet extends AioApiServlet {
           out.print(db.getDevicesInfo());
           db.close();
         } catch (Exception e) {
-          System.out.println("Unable to retrieve Device Information.");
+          logger.error("Unable to retrieve Device Information.");
         }
       }
       asyncCtx.complete();
     } catch (SQLException e) {
-      System.out.println("Invalid SQL statement.");
+      logger.error("Invalid SQL statement.");
     }
   }
 }

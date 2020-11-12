@@ -40,8 +40,8 @@ public class AioFilesServlet extends AioApiServlet {
     HttpServletRequest req = (HttpServletRequest) asyncCtx.getRequest();
     HttpServletResponse res = (HttpServletResponse) asyncCtx.getResponse();
 
-    String fsRootDir = new AioDb().getProperty("fs.root.dir");
-    String fsFilesDir = new AioDb().getProperty("fs.files.dir");
+    final String fsRootDir = new AioDb().getProperty("fs.root.dir");
+    final String fsFilesDir = new AioDb().getProperty("fs.files.dir");
 
     List<String> list = getPathElements(req.getRequestURI());
     if (list.size() > 2 && list.get(0).equals("api") && list.get(1).equals("v1")) {

@@ -57,15 +57,15 @@ public class AioApiServlet extends HttpServlet {
 
     int pos = authHeader.indexOf(' ');
     if (pos > 0) {
-      String method = authHeader.substring(0, pos);
+      final String method = authHeader.substring(0, pos);
       if (method.compareToIgnoreCase(basicAuth) == 0) {
-        String authToken = authHeader.substring(pos + 1);
-        String authString = new String(Base64.getDecoder().decode(authToken),
+        final String authToken = authHeader.substring(pos + 1);
+        final String authString = new String(Base64.getDecoder().decode(authToken),
             StandardCharsets.US_ASCII);
         pos = authString.indexOf(':');
         if (pos >= 0) {
-          String user = authString.substring(0, pos);
-          String password = authString.substring(pos + 1);
+          final String user = authString.substring(0, pos);
+          final String password = authString.substring(pos + 1);
           if (user.equals(userParam) && password.equals(passParam)) {
             return true;
           }
@@ -213,7 +213,7 @@ public class AioApiServlet extends HttpServlet {
           });
       res.setContentType("application/octet-stream");
       for (Path entry : stream) {
-        String name = entry.getFileName().toString();
+        final String name = entry.getFileName().toString();
         out.write(name.getBytes(StandardCharsets.US_ASCII));
         out.write(nl);
       }
@@ -236,7 +236,7 @@ public class AioApiServlet extends HttpServlet {
           });
       res.setContentType("application/octet-stream");
       for (Path entry : stream) {
-        String name = entry.getFileName().toString();
+        final String name = entry.getFileName().toString();
         out.write(name.getBytes(StandardCharsets.US_ASCII));
         out.write(nl);
       }
@@ -259,7 +259,7 @@ public class AioApiServlet extends HttpServlet {
 
     if (checkCredentials(req, res)) {
 
-      System.out.println(req.getRequestURI());
+      logger.info(req.getRequestURI());
       if (isMethodAllow(req.getMethod())) {
         AsyncContext asyncCtx = req.startAsync();
 
@@ -288,10 +288,10 @@ public class AioApiServlet extends HttpServlet {
     HttpServletRequest req = (HttpServletRequest) asyncCtx.getRequest();
     HttpServletResponse res = (HttpServletResponse) asyncCtx.getResponse();
 
-    String fsRootDir = new AioDb().getProperty("fs.root.dir");
-    String fsDevicesDir = new AioDb().getProperty("fs.devices.dir");
-    String fsValuesDir = new AioDb().getProperty("fs.values.dir");
-    String fsFilesDir = new AioDb().getProperty("fs.files.dir");
+    final String fsRootDir = new AioDb().getProperty("fs.root.dir");
+    final String fsDevicesDir = new AioDb().getProperty("fs.devices.dir");
+    final String fsValuesDir = new AioDb().getProperty("fs.values.dir");
+    final String fsFilesDir = new AioDb().getProperty("fs.files.dir");
 
     List<String> list = getPathElements(req.getRequestURI());
     if (list.size() > 2 && list.get(0).equals("api") && list.get(1).equals("v1")) {
@@ -310,8 +310,8 @@ public class AioApiServlet extends HttpServlet {
         }
       } else if (list.get(2).equals("devices")) {
         if (list.size() > 4) {
-          String uuid = list.get(3);
-          String fileName = list.get(4);
+          final String uuid = list.get(3);
+          final String fileName = list.get(4);
           Path filePath = Paths.get(fsRootDir, fsDevicesDir, uuid, fileName);
           if (checkFileNameSanity(fileName) && pathTraversalCheck(filePath)) {
             copyFile(filePath, res);
@@ -346,10 +346,10 @@ public class AioApiServlet extends HttpServlet {
     HttpServletRequest req = (HttpServletRequest) asyncCtx.getRequest();
     HttpServletResponse res = (HttpServletResponse) asyncCtx.getResponse();
 
-    String fsRootDir = new AioDb().getProperty("fs.root.dir");
-    String fsDevicesDir = new AioDb().getProperty("fs.devices.dir");
-    String fsValuesDir = new AioDb().getProperty("fs.values.dir");
-    String fsFilesDir = new AioDb().getProperty("fs.files.dir");
+    final String fsRootDir = new AioDb().getProperty("fs.root.dir");
+    final String fsDevicesDir = new AioDb().getProperty("fs.devices.dir");
+    final String fsValuesDir = new AioDb().getProperty("fs.values.dir");
+    final String fsFilesDir = new AioDb().getProperty("fs.files.dir");
 
     List<String> list = getPathElements(req.getRequestURI());
     if (list.size() > 2 && list.get(0).equals("api") && list.get(1).equals("v1")) {
@@ -368,14 +368,14 @@ public class AioApiServlet extends HttpServlet {
 
       } else if (list.get(2).equals("devices")) {
         if (list.size() > 4) {
-          String uuid = list.get(3);
-          String fileName = list.get(4);
+          final String uuid = list.get(3);
+          final String fileName = list.get(4);
           Path filePath = Paths.get(fsRootDir, fsDevicesDir, uuid, fileName);
           if (checkFileNameSanity(fileName) && pathTraversalCheck(filePath)) {
             filePath.toFile().delete();
           }
         } else if (list.size() > 3) {
-          String uuid = list.get(3);
+          final String uuid = list.get(3);
           Path filePath = Paths.get(fsRootDir, fsDevicesDir, uuid);
           if (pathTraversalCheck(filePath)) {
             deleteDirectory(req, res, filePath);
@@ -400,10 +400,10 @@ public class AioApiServlet extends HttpServlet {
     HttpServletRequest req = (HttpServletRequest) asyncCtx.getRequest();
     HttpServletResponse res = (HttpServletResponse) asyncCtx.getResponse();
 
-    String fsRootDir = new AioDb().getProperty("fs.root.dir");
-    String fsDevicesDir = new AioDb().getProperty("fs.devices.dir");
-    String fsValuesDir = new AioDb().getProperty("fs.values.dir");
-    String fsFilesDir = new AioDb().getProperty("fs.files.dir");
+    final String fsRootDir = new AioDb().getProperty("fs.root.dir");
+    final String fsDevicesDir = new AioDb().getProperty("fs.devices.dir");
+    final String fsValuesDir = new AioDb().getProperty("fs.values.dir");
+    final String fsFilesDir = new AioDb().getProperty("fs.files.dir");
 
     List<String> list = getPathElements(req.getRequestURI());
     if (list.size() > 2 && list.get(0).equals("api") && list.get(1).equals("v1")) {
@@ -414,7 +414,7 @@ public class AioApiServlet extends HttpServlet {
           copyFile(req, res, filePath);
         }
       } else if (list.get(2).equals("values") && list.size() > 3) {
-        String fileName = list.get(3);
+        final String fileName = list.get(3);
         Path filePath = Paths.get(fsRootDir, fsValuesDir, fileName);
         if (checkFileNameSanity(fileName) && pathTraversalCheck(filePath)) {
           copyFile(req, res, filePath);
@@ -423,8 +423,8 @@ public class AioApiServlet extends HttpServlet {
           syncDatabase();
         }
       } else if (list.get(2).equals("devices") && list.size() > 4) {
-        String uuid = list.get(3);
-        String fileName = list.get(4);
+        final String uuid = list.get(3);
+        final String fileName = list.get(4);
         File guidDir = Paths.get(fsRootDir, fsDevicesDir, uuid).toFile();
         Path filePath = Paths.get(fsRootDir, fsDevicesDir, uuid, fileName);
         if (!guidDir.exists()) {
