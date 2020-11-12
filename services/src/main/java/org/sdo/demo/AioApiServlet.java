@@ -220,7 +220,7 @@ public class AioApiServlet extends HttpServlet {
 
     if (checkCredentials(req, res)) {
 
-      System.out.println(req.getRequestURI());
+      logger.info(req.getRequestURI());
       if (isMethodAllow(req.getMethod())) {
         AsyncContext asyncCtx = req.startAsync();
 

@@ -70,7 +70,6 @@ class AioApiServletTest {
   void getPathName() {
     String expected = "testfolder";
     String actual = obj.getPathName("/home/test/testfolder");
-    System.out.println(actual);
     assertEquals(expected, actual);
   }
 
