@@ -93,6 +93,7 @@ credentials (username: 'aio', password: 'Sm9@wojk').
 | `PUT`     | /api/v1/values/{file}         | YES    | Upload the payload specified by {file}                                         |
 | `DELETE`  | /api/v1/values/{file}         | YES    | Delete {file} from the values folder                                           |
 | `GET`     | /api/v1/values/{file}         | YES    | Get the payload specified by {file}                                            |
+| `GET`     | /api/v1/deviceinfo/{seconds}  | YES    | Serves the serial no. and GUID of the devices that completed DI in last `n` seconds |
 
 ## Configuring All-In-One Demo for Remote SDO Client
 
