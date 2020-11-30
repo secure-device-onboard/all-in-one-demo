@@ -33,7 +33,7 @@
         try {
           fileItems = upload.parseRequest(request);
         } catch (FileUploadException e) {
-          e.printStackTrace();
+          out.println("Error with file uploading.");
         }
 
         assert fileItems != null;
@@ -50,7 +50,7 @@
             try {
               item.write( file ) ;
             } catch (Exception e) {
-              e.printStackTrace();
+              out.println("Error writing the file :" + fileName );
             }
             out.println("Uploaded File: " + fileName + "<br>");
           }
