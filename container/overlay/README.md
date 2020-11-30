@@ -95,6 +95,16 @@ credentials (username: 'aio', password: 'Sm9@wojk').
 | `GET`     | /api/v1/values/{file}         | YES    | Get the payload specified by {file}                                            |
 | `GET`     | /api/v1/deviceinfo/{seconds}  | YES    | Serves the serial no. and GUID of the devices that completed DI in last `n` seconds |
 
+Following is the list of REST response error codes and it's description :
+
+|     Error Code     |             Description                  |
+| -------------------:|:----------------------------------------:|
+| `401 Unauthorized`  | When an invalid Authentication header is present with the REST Request. Make sure to use the correct REST credentials. |
+| `404 Not Found`     | When an invalid REST request is sent to AIO. Make sure to use the correct REST API endpoint. |
+| `405 Method Not Allowed` | When an unsupported REST method is requested. Currently, AIO supports GET, PUT and DELETE only. |
+| `406 Not Acceptable` | When an invalid filename is passed through the REST endpoints. |
+| `500 Internal Server Error` | Due to internal error, AIO unable to fetch/copy/delete the requested file. |
+
 ## Configuring All-In-One Demo for Remote SDO Client
 
 While executing a SDO Client from a different machine, you would need to change the IP address for
