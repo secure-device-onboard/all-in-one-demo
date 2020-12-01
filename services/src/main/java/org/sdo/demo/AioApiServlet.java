@@ -131,6 +131,21 @@ public class AioApiServlet extends HttpServlet {
   }
 
   /**
+   *  Validates GUID.
+   */
+  public boolean checkGuid(String guid) {
+
+    String pattern = "^[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}$";
+    Pattern regex = Pattern.compile(pattern);
+    if (regex.matcher(guid).matches()) {
+      return true;
+    }
+
+    logger.error("Invalid GUID");
+    return false;
+  }
+
+  /**
    * Basic sanity check on the filename.
    */
   public boolean checkFileNameSanity(String filename) {
@@ -317,7 +332,7 @@ public class AioApiServlet extends HttpServlet {
           final String uuid = list.get(3);
           final String fileName = list.get(4);
           Path filePath = Paths.get(fsRootDir, fsDevicesDir, uuid, fileName);
-          if (checkFileNameSanity(fileName) && pathTraversalCheck(filePath)) {
+          if (checkFileNameSanity(fileName) && pathTraversalCheck(filePath) && checkGuid(uuid)) {
             copyFile(filePath, res);
           } else {
             res.setStatus(406);
@@ -385,7 +400,7 @@ public class AioApiServlet extends HttpServlet {
           final String uuid = list.get(3);
           final String fileName = list.get(4);
           Path filePath = Paths.get(fsRootDir, fsDevicesDir, uuid, fileName);
-          if (checkFileNameSanity(fileName) && pathTraversalCheck(filePath)) {
+          if (checkFileNameSanity(fileName) && pathTraversalCheck(filePath) && checkGuid(uuid)) {
             filePath.toFile().delete();
           } else {
             res.setStatus(406);
@@ -449,10 +464,10 @@ public class AioApiServlet extends HttpServlet {
         final String fileName = list.get(4);
         File guidDir = Paths.get(fsRootDir, fsDevicesDir, uuid).toFile();
         Path filePath = Paths.get(fsRootDir, fsDevicesDir, uuid, fileName);
-        if (!guidDir.exists()) {
-          guidDir.mkdir();
-        }
-        if (checkFileNameSanity(fileName) && pathTraversalCheck(filePath)) {
+        if (checkFileNameSanity(fileName) && pathTraversalCheck(filePath) && checkGuid(uuid)) {
+          if (!guidDir.exists()) {
+            guidDir.mkdir();
+          }
           copyFile(req, res, filePath);
         } else {
           res.setStatus(406);
