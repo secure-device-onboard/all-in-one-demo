@@ -131,6 +131,21 @@ public class AioApiServlet extends HttpServlet {
   }
 
   /**
+   *  Validates GUID.
+   */
+  public boolean checkGuid(String guid) {
+
+    String pattern = "^[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}$";
+    Pattern regex = Pattern.compile(pattern);
+    if (regex.matcher(guid).matches()) {
+      return true;
+    }
+
+    logger.error("Invalid GUID");
+    return false;
+  }
+
+  /**
    * Basic sanity check on the filename.
    */
   public boolean checkFileNameSanity(String filename) {
@@ -301,11 +316,15 @@ public class AioApiServlet extends HttpServlet {
           Path filePath = Paths.get(fsRootDir, fsValuesDir, fileName);
           if (checkFileNameSanity(fileName) && pathTraversalCheck(filePath)) {
             copyFile(filePath, res);
+          } else {
+            res.setStatus(406);
           }
         } else if (list.size() == 3) {
           Path filePath = Paths.get(fsRootDir, fsValuesDir);
           if (pathTraversalCheck(filePath)) {
             getFiles(filePath, res);
+          } else {
+            res.setStatus(406);
           }
         }
       } else if (list.get(2).equals("devices")) {
@@ -313,13 +332,17 @@ public class AioApiServlet extends HttpServlet {
           final String uuid = list.get(3);
           final String fileName = list.get(4);
           Path filePath = Paths.get(fsRootDir, fsDevicesDir, uuid, fileName);
-          if (checkFileNameSanity(fileName) && pathTraversalCheck(filePath)) {
+          if (checkFileNameSanity(fileName) && pathTraversalCheck(filePath) && checkGuid(uuid)) {
             copyFile(filePath, res);
+          } else {
+            res.setStatus(406);
           }
         } else if (list.size() == 3) {
           Path filePath = Paths.get(fsRootDir, fsDevicesDir);
           if (pathTraversalCheck(filePath)) {
             getUuids(filePath, res);
+          } else {
+            res.setStatus(406);
           }
 
         }
@@ -327,6 +350,8 @@ public class AioApiServlet extends HttpServlet {
         Path filePath = Paths.get(fsRootDir, fsFilesDir);
         if (pathTraversalCheck(filePath)) {
           getFiles(filePath, res);
+        } else {
+          res.setStatus(406);
         }
       } else {
         res.setStatus(404);
@@ -358,12 +383,16 @@ public class AioApiServlet extends HttpServlet {
         Path filePath = Paths.get(fsRootDir, fsFilesDir, fileName);
         if (checkFileNameSanity(fileName) && pathTraversalCheck(filePath)) {
           filePath.toFile().delete();
+        } else {
+          res.setStatus(406);
         }
       } else if (list.get(2).equals("values") && list.size() > 3) {
         String fileName = list.get(3);
         Path filePath = Paths.get(fsRootDir, fsValuesDir, list.get(3));
         if (checkFileNameSanity(fileName) && pathTraversalCheck(filePath)) {
           filePath.toFile().delete();
+        } else {
+          res.setStatus(406);
         }
 
       } else if (list.get(2).equals("devices")) {
@@ -371,14 +400,18 @@ public class AioApiServlet extends HttpServlet {
           final String uuid = list.get(3);
           final String fileName = list.get(4);
           Path filePath = Paths.get(fsRootDir, fsDevicesDir, uuid, fileName);
-          if (checkFileNameSanity(fileName) && pathTraversalCheck(filePath)) {
+          if (checkFileNameSanity(fileName) && pathTraversalCheck(filePath) && checkGuid(uuid)) {
             filePath.toFile().delete();
+          } else {
+            res.setStatus(406);
           }
         } else if (list.size() > 3) {
           final String uuid = list.get(3);
           Path filePath = Paths.get(fsRootDir, fsDevicesDir, uuid);
           if (pathTraversalCheck(filePath)) {
             deleteDirectory(req, res, filePath);
+          } else {
+            res.setStatus(406);
           }
         } else {
           res.setStatus(404);
@@ -412,12 +445,16 @@ public class AioApiServlet extends HttpServlet {
         Path filePath = Paths.get(fsRootDir, fsFilesDir, fileName);
         if (checkFileNameSanity(fileName) && pathTraversalCheck(filePath)) {
           copyFile(req, res, filePath);
+        } else {
+          res.setStatus(406);
         }
       } else if (list.get(2).equals("values") && list.size() > 3) {
         final String fileName = list.get(3);
         Path filePath = Paths.get(fsRootDir, fsValuesDir, fileName);
         if (checkFileNameSanity(fileName) && pathTraversalCheck(filePath)) {
           copyFile(req, res, filePath);
+        } else {
+          res.setStatus(406);
         }
         if (fileName.equals("redirect.properties")) {
           syncDatabase();
@@ -427,11 +464,13 @@ public class AioApiServlet extends HttpServlet {
         final String fileName = list.get(4);
         File guidDir = Paths.get(fsRootDir, fsDevicesDir, uuid).toFile();
         Path filePath = Paths.get(fsRootDir, fsDevicesDir, uuid, fileName);
-        if (!guidDir.exists()) {
-          guidDir.mkdir();
-        }
-        if (checkFileNameSanity(fileName) && pathTraversalCheck(filePath)) {
+        if (checkFileNameSanity(fileName) && pathTraversalCheck(filePath) && checkGuid(uuid)) {
+          if (!guidDir.exists()) {
+            guidDir.mkdir();
+          }
           copyFile(req, res, filePath);
+        } else {
+          res.setStatus(406);
         }
       } else {
         res.setStatus(404);
