@@ -50,6 +50,8 @@ public class AioFilesServlet extends AioApiServlet {
         Path filePath = Paths.get(fsRootDir, fsFilesDir, list.get(3));
         if (checkFileNameSanity(fileName) && pathTraversalCheck(filePath)) {
           copyFile(filePath, res);
+        } else {
+          res.setStatus(406);
         }
       } else {
         res.setStatus(404);
