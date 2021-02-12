@@ -6,13 +6,13 @@
 
   <groupId>org.sdo.aio</groupId>
   <artifactId>container</artifactId>
-  <version>1.10</version>
+  <version>1.10.1-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <parent>
     <groupId>org.sdo</groupId>
     <artifactId>aio</artifactId>
-    <version>1.10</version>
+    <version>1.10.1-SNAPSHOT</version>
     <relativePath>..</relativePath>
   </parent>
 
@@ -32,7 +32,7 @@
     <dependency>
       <groupId>org.sdo</groupId>
       <artifactId>rendezvous</artifactId>
-      <version>1.10</version>
+      <version>1.10.1-SNAPSHOT</version>
       <type>war</type>
     </dependency>
 
@@ -45,35 +45,35 @@
     <dependency>
       <groupId>org.sdo.rendezvous</groupId>
       <artifactId>rendezvous-service</artifactId>
-      <version>1.10</version>
+      <version>1.10.1-SNAPSHOT</version>
       <type>war</type>
     </dependency>
 
     <dependency>
       <groupId>org.sdo.sct</groupId>
       <artifactId>manufacturer-webapp</artifactId>
-      <version>1.10</version>
+      <version>1.10.1-SNAPSHOT</version>
       <type>war</type>
     </dependency>
 
     <dependency>
       <groupId>org.sdo.iotplatformsdk.to0service</groupId>
       <artifactId>to0serviceimpl</artifactId>
-      <version>1.10</version>
+      <version>1.10.1-SNAPSHOT</version>
       <type>war</type>
     </dependency>
 
     <dependency>
       <groupId>org.sdo.iotplatformsdk.ocs</groupId>
       <artifactId>ocsfs</artifactId>
-      <version>1.10</version>
+      <version>1.10.1-SNAPSHOT</version>
       <type>war</type>
     </dependency>
 
     <dependency>
       <groupId>org.sdo.iotplatformsdk.ops</groupId>
       <artifactId>opsimpl</artifactId>
-      <version>1.10</version>
+      <version>1.10.1-SNAPSHOT</version>
       <type>war</type>
     </dependency>
 
@@ -81,7 +81,7 @@
     <dependency>
       <groupId>org.sdo.demo</groupId>
       <artifactId>services</artifactId>
-      <version>1.10</version>
+      <version>1.10.1-SNAPSHOT</version>
     </dependency>
 
     <dependency>
