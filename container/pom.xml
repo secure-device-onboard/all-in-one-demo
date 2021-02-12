@@ -17,12 +17,12 @@
   </parent>
 
   <properties>
-    <rendezvous.war>rendezvous-1.10.war</rendezvous.war>
-    <rvservice.war>rendezvous-service-1.10.war</rvservice.war>
-    <manufacturer.war>manufacturer-webapp-1.10.war</manufacturer.war>
-    <to0service.war>to0serviceimpl-1.10.war</to0service.war>
-    <ops.war>opsimpl-1.10.war</ops.war>
-    <ocs.war>ocsfs-1.10.war</ocs.war>
+    <rendezvous.war>rendezvous-1.10.1-SNAPSHOT.war</rendezvous.war>
+    <rvservice.war>rendezvous-service-1.10.1-SNAPSHOT.war</rvservice.war>
+    <manufacturer.war>manufacturer-webapp-1.10.1-SNAPSHOT.war</manufacturer.war>
+    <to0service.war>to0serviceimpl-1.10.1-SNAPSHOT.war</to0service.war>
+    <ops.war>opsimpl-1.10.1-SNAPSHOT.war</ops.war>
+    <ocs.war>ocsfs-1.10.1-SNAPSHOT.war</ocs.war>
     <tomcat.folder>apache-tomcat-9.0.43</tomcat.folder>
     <tomcat.url>https://archive.apache.org/dist/tomcat/tomcat-9/v9.0.43/bin/apache-tomcat-9.0.43.zip</tomcat.url>
     <project.demo.directory>../demo</project.demo.directory>
