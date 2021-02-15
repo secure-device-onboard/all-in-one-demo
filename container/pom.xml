@@ -23,8 +23,8 @@
     <to0service.war>to0serviceimpl-1.10.1-SNAPSHOT.war</to0service.war>
     <ops.war>opsimpl-1.10.1-SNAPSHOT.war</ops.war>
     <ocs.war>ocsfs-1.10.1-SNAPSHOT.war</ocs.war>
-    <tomcat.folder>apache-tomcat-9.0.39</tomcat.folder>
-    <tomcat.url>https://archive.apache.org/dist/tomcat/tomcat-9/v9.0.39/bin/apache-tomcat-9.0.39.zip</tomcat.url>
+    <tomcat.folder>apache-tomcat-9.0.43</tomcat.folder>
+    <tomcat.url>https://archive.apache.org/dist/tomcat/tomcat-9/v9.0.43/bin/apache-tomcat-9.0.43.zip</tomcat.url>
     <project.demo.directory>../demo</project.demo.directory>
   </properties>
 
