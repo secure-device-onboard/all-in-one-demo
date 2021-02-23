@@ -36,6 +36,7 @@ public class RelayServlet extends HttpServlet {
   public static final java.lang.String LISTENER_PARAM = "listener";
 
   private static Logger logger = LoggerFactory.getLogger(RelayServlet.class);
+  private SSLContext sslContext;
 
   public RelayServlet() {
     super();
@@ -57,15 +58,23 @@ public class RelayServlet extends HttpServlet {
       webapp = "ROOT";
     }
 
-    if (webapp.equals("8001")) {
-      logger.info("Using OnPremRV");
-      final String onPremUrl = "http://localhost:8001";
-      return onPremUrl;
+    if (sslContext == null) {
+      sslContext = new AioDb().getSslContext();
     }
 
     String apiUrl = System.getProperty("rest.api.server");
     if (apiUrl == null) {
       apiUrl = "http://localhost:8080";
+    }
+
+    if (webapp.equals("8001")) {
+      logger.info("Using OnPremRV");
+      final String onPremUrl = "http://localhost:8001";
+      return onPremUrl;
+    } else if (webapp.equals("8000")) {
+      logger.info("Using OnPremRV");
+      final String onPremUrl = "https://" + URI.create(apiUrl).getHost() + ":8000";
+      return onPremUrl;
     }
 
     return apiUrl + webapp;
@@ -76,8 +85,8 @@ public class RelayServlet extends HttpServlet {
 
     if (listenerClass != null) {
       try {
-        return (RelayListener)Class.forName(listenerClass)
-          .getDeclaredConstructor().newInstance();
+        return (RelayListener) Class.forName(listenerClass)
+            .getDeclaredConstructor().newInstance();
       } catch (InstantiationException e) {
         logger.error("Unable to create the RelayListener Object.");
       } catch (IllegalAccessException e) {
@@ -184,7 +193,7 @@ public class RelayServlet extends HttpServlet {
       HttpClient hc = HttpClient.newBuilder()
           .version(HttpClient.Version.HTTP_1_1)
           .followRedirects(HttpClient.Redirect.NEVER)
-          .sslContext(SSLContext.getInstance("TLS"))
+          .sslContext(sslContext)
           .sslParameters(new SSLParameters())
           .build();
 
@@ -200,7 +209,7 @@ public class RelayServlet extends HttpServlet {
         listener.afterAccess(request.getRequestURI());
       }
 
-    } catch (InterruptedException | NoSuchAlgorithmException e) {
+    } catch (InterruptedException e) {
       logger.error("Error with HTTPclient stream");
       throw new ServletException(e);
     }
