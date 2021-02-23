@@ -19,7 +19,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.security.KeyStore;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -31,8 +33,12 @@ import java.time.Duration;
 import java.util.Base64;
 import java.util.Properties;
 import java.util.UUID;
+import javax.net.ssl.KeyManager;
+import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLParameters;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.TrustManagerFactory;
 import org.apache.tomcat.util.IntrospectionUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -56,6 +62,51 @@ public class AioDb implements AutoCloseable {
       result = IntrospectionUtils.replaceProperties(result, System.getProperties(), null);
     }
     return result;
+  }
+
+  /**
+   * Get SSLContext for making request.
+   */
+  public SSLContext getSslContext() {
+    try {
+
+      //load values from catalina propeties
+      String keyStoreFile = getProperty("server.ssl.key-store");
+      String keyStorePwd = getProperty("server.ssl.key-store-password");
+      String keyStoreType = getProperty("server.ssl.key-store-type");
+
+      String trustStoreFile = getProperty("server.ssl.trust-store");
+      String trustStorePwd = getProperty("server.ssl.trust-store-password");
+      String trustStoreType = getProperty("server.ssl.trust-store-type");
+
+      final KeyStore identityKeyStore = KeyStore.getInstance(keyStoreType);
+      final File keystoreFile = new File(keyStoreFile);
+      final FileInputStream identityKeyStoreFile = new FileInputStream(keystoreFile);
+      identityKeyStore.load(identityKeyStoreFile, keyStorePwd.toCharArray());
+
+      final KeyManagerFactory kmf =
+          KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
+      kmf.init(identityKeyStore, keyStorePwd.toCharArray());
+      final KeyManager[] km = kmf.getKeyManagers();
+
+      final KeyStore trustKeyStore = KeyStore.getInstance(trustStoreType);
+      final File truststoreFile = new File(trustStoreFile);
+      final FileInputStream trustKeyStoreFile = new FileInputStream(truststoreFile);
+      trustKeyStore.load(trustKeyStoreFile, trustStorePwd.toCharArray());
+
+      final TrustManagerFactory tmf =
+          TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+      tmf.init(trustKeyStore);
+      final TrustManager[] tm = tmf.getTrustManagers();
+
+      final SSLContext sslContext = SSLContext.getInstance("TLS");
+      sslContext.init(km, tm, SecureRandom.getInstanceStrong());
+      return sslContext;
+    } catch (Exception e) {
+      logger.error("Error occurred while creating ssl context. ", e.getMessage());
+      logger.debug(e.getMessage(), e);
+      return null;
+    }
   }
 
   /**
@@ -92,7 +143,11 @@ public class AioDb implements AutoCloseable {
     }
     if (dns != null) {
       StringBuilder builder = new StringBuilder();
-      builder.append("http://");
+      String scheme = getProperty("org.sdo.rv.scheme");
+      if (scheme == null) {
+        scheme = "http://";
+      }
+      builder.append(scheme);
       builder.append(dns);
       if (port != null) {
         builder.append(":");
@@ -410,7 +465,7 @@ public class AioDb implements AutoCloseable {
       HttpClient hc = HttpClient.newBuilder()
            .version(HttpClient.Version.HTTP_1_1)
            .followRedirects(HttpClient.Redirect.NEVER)
-           .sslContext(SSLContext.getInstance("TLS"))
+           .sslContext(getSslContext())
            .sslParameters(new SSLParameters())
            .build();
 
@@ -419,7 +474,7 @@ public class AioDb implements AutoCloseable {
 
       logger.info(String.valueOf(response));
 
-    } catch (IOException | InterruptedException | NoSuchAlgorithmException e) {
+    } catch (IOException | InterruptedException e) {
       logger.error("Error Performing TO0");
       throw new SQLException(e);
     }

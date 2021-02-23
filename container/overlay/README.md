@@ -135,3 +135,81 @@ Upload the generated redirect.properties file using following REST API call.
 ```
 PUT http://{host-ip-address}:8080/api/v1/values/redirect.properties
 ```
+## Configuring All-In-One Demo for external TLS Communications
+
+By default, the all-in-one uses HTTP for all communications on port 8080.   In addition, the all on one can be configured to handle HTTPS on port 8443.
+
+## Setup-1: Create or import a webserver certificate into a Java Keystore (JKS)
+
+Ensure the web certificate is issued to the resolvable domain of the AIO server.
+
+## Step-2: Uncomment and edit the 8443 Http11NioProtocol connector in tomcat/conf/server.xml
+ <!-- Define an SSL/TLS HTTP/1.1 Connector on port 8443
+         This connector uses the NIO implementation. The default
+         SSLImplementation will depend on the presence of the APR/native
+         library and the useOpenSSL attribute of the
+         AprLifecycleListener.
+         Either JSSE or OpenSSL style configuration may be used regardless of
+         the SSLImplementation selected. JSSE style configuration is used below.
+    -->
+
+    <Connector port="8443" protocol="org.apache.coyote.http11.Http11NioProtocol"
+               maxThreads="150" 
+		scheme="https" secure="true" SSLEnabled="true"
+            keystoreFile="<Path to JKS File>" 
+            keystorePass="<JKS Store Password>"
+            clientAuth="false" sslProtocol="TLS">
+    </Connector>
+
+## Step-3: Check TLS access of owner using heath check
+
+Using browser or curl or wget
+https://<FQDN>:8443/ops/mp/113/health
+
+## Configure Owner to redirect to https port
+
+Edit tomcat/db/v1/values/redirect.properties
+
+port=8443
+
+## Configure supply chain to use https for rendezvous
+
+Edit tomcat/conf/catalina.properties
+
+org.sdo.rv.scheme=https://
+
+## Configure Relay servlet to use trust store
+
+Edit tomcat/conf/catalina.properties
+
+Add web server cert to client trust stores
+server.ssl.trust-store=<Path to JKS>
+server.ssl.trust-store-password=<Password of JKS>
+server.ssl.trust-store-type=JKS
+
+If using a test or internal certificate not issues by a web authority then add the cert into the Java CA Store
+keytool -export -alias tomcat -file tomcat.crt -keystore <YourWebJSK>.jks
+keytool -import -trustcacerts -noprompt -keystore "$JAVA_HOME\cacerts" -storepass changeit -alias tomcat -file tomcat.crt
+
+## Configure All-In-One Demo for HTTPS with docker
+
+Add the line below to the Dockerfile in order to add the cert to the java certs of the container.
+RUN keytool -import -trustcacerts -noprompt -keystore "/usr/lib/jvm/java-11-openjdk-amd64/lib/security/cacerts" -storepass changeit -alias tomcat -file <PATH_TO_CERT>
+
+docker-compose.yaml
+extra_hosts:
+- "<Domain_Name_in_Cert>:127.0.0.1"
+
+## Configure All-In-One Demo for internal HTTPS communications (Optional)
+
+Edit tomcat/conf/catalina.properties
+rest.api.server=https://<FQDN>:8443/
+
+Add web server cert to client trust stores
+server.ssl.trust-store=<Path to JKS>
+server.ssl.trust-store-password=<Password of JKS>
+server.ssl.trust-store-type=JKS
+client.ssl.trust-store=<Path to JKS>
+client.ssl.trust-store-password=<Password of JKS>
+client.ssl.trust-store-type=JKS
+
