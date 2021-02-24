@@ -18,7 +18,7 @@ REPO_AIO=https://github.com/secure-device-onboard/all-in-one-demo.git
 REPO_RV=https://github.com/secure-device-onboard/rendezvous-service.git
 
 # The same branch will be used to build other SDO components( PRI, IOT, RV & SCT).
-REPO_BRANCH=master
+REPO_BRANCH=1.10-rel
 
 cd /home/sdouser/
 git clone $REPO_IOT
