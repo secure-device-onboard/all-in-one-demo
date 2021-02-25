@@ -86,7 +86,7 @@
     -->
     <!--
     <Connector port="8443" protocol="org.apache.coyote.http11.Http11NioProtocol"
-               maxThreads="150" scheme="https" secure="true" SSLEnabled="true">
+               maxThreads="150" scheme="https" secure="true" SSLEnabled="true"
             keystoreFile="<Path to JKS File>" 
             keystorePass="<JKS Store Password>"
             clientAuth="false" sslProtocol="TLS">
