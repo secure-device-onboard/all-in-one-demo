@@ -13,13 +13,13 @@
 
   <groupId>org.sdo.demo</groupId>
   <artifactId>services</artifactId>
-  <version>1.10.2-SNAPSHOT</version>
+  <version>1.10.2</version>
   <packaging>jar</packaging>
 
   <parent>
     <groupId>org.sdo</groupId>
     <artifactId>aio</artifactId>
-    <version>1.10.2-SNAPSHOT</version>
+    <version>1.10.2</version>
     <relativePath>..</relativePath>
   </parent>
 
