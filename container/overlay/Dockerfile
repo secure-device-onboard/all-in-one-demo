@@ -4,7 +4,8 @@
 #
 FROM ubuntu:20.04
 
-RUN apt-get update && apt-get install openjdk-11-jre-headless --yes
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get -y update && apt-get -y upgrade && apt-get -y install openjdk-11-jre-headless
 
 RUN useradd -ms /bin/bash aio
 USER aio
