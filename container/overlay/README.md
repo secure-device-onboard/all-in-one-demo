@@ -5,6 +5,8 @@ Platform SDK Service and SDO Rendezvous Service from a single **docker** instanc
 purpose of this demo is to fast-track demonstration of Secure Device Onboard protocol using
 different client implementations.
 
+***NOTE:*** This is an example implementation using simplified credentials. This must be changed while performing production deployment
+
 # Getting Started with the SDO All-In-One Demo
 
 The following are the system constraints for the All-in-One demo.
@@ -74,12 +76,16 @@ After the script execution, the status of SDO Client execution is available in r
 All-In-One demo provides REST interfaces, which allows All-In-One demo administrator to update the
 configuration parameters as well as upload/download vouchers and payload files.
 
+Following default credentials (username: 'aio', password: 'Sm9@wojk') are used for authenticated REST calls.
+
+***NOTE:*** This is an example implementation using simplified credentials. This must be changed while performing production deployment.
+
 While executing the REST calls, prefix http://{host-ip-address}:8080 to the REST APIs below.
 
 The REST calls can be executed through Postman or equivalent tools.
 
 - For the authenticated calls, we need to select password based authentication with default
-credentials (username: 'aio', password: 'Sm9@wojk').
+credentials.
 - For body of the message, use 'Binary' format wherever we need to upload a file.
 
 | Operation | REST API                      | Auth?  | Description                                                                    |
