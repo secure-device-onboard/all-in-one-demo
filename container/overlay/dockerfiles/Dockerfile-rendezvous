@@ -2,7 +2,8 @@
 # SPDX-License-Identifier: Apache 2.0
 
 FROM ubuntu:20.04
-RUN apt-get update && apt-get install -y openjdk-11-jdk
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get -y update && apt-get -y upgrade && apt-get install -y openjdk-11-jdk
 RUN apt-get install -y wget
 
 # Create a user 'sdouser'. If the user name is updated, please update the same
