@@ -13,19 +13,19 @@
 
   <groupId>org.sdo.demo</groupId>
   <artifactId>services</artifactId>
-  <version>1.10.4-SNAPSHOT</version>
+  <version>1.10.4</version>
   <packaging>jar</packaging>
 
   <parent>
     <groupId>org.sdo</groupId>
     <artifactId>aio</artifactId>
-    <version>1.10.4-SNAPSHOT</version>
+    <version>1.10.4</version>
     <relativePath>..</relativePath>
   </parent>
 
   <properties>
     <tomcat.version>9.0.56</tomcat.version>
-    <h2.version>2.0.202</h2.version>
+    <h2.version>1.4.200</h2.version>
     <json.version>20210307</json.version>
     <slf4j-api.version>1.7.30</slf4j-api.version>
     <spring-test.version>5.3.13</spring-test.version>
