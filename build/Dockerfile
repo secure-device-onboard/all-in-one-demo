@@ -8,7 +8,8 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && \
     apt-get install -y git  \
     openjdk-11-jdk-headless \
-    maven
+    maven \
+    haveged
 
 # Create a user 'sdouser'. If the user name is updated, please update the same in docker-compose.yaml.
 RUN useradd -ms /bin/bash sdouser
