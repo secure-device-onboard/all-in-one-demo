@@ -13,7 +13,7 @@
 
   <artifactId>aio</artifactId>
   <groupId>org.sdo</groupId>
-  <version>1.10.5-SNAPSHOT</version>
+  <version>1.10.5</version>
   <name>AIO</name>
   <packaging>pom</packaging>
 

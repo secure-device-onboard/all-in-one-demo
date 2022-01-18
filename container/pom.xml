@@ -6,18 +6,18 @@
 
   <groupId>org.sdo.aio</groupId>
   <artifactId>container</artifactId>
-  <version>1.10.5-SNAPSHOT</version>
+  <version>1.10.5</version>
   <packaging>pom</packaging>
 
   <parent>
     <groupId>org.sdo</groupId>
     <artifactId>aio</artifactId>
-    <version>1.10.5-SNAPSHOT</version>
+    <version>1.10.5</version>
     <relativePath>..</relativePath>
   </parent>
 
   <properties>
-    <sdo.version>1.10.5-SNAPSHOT</sdo.version>
+    <sdo.version>1.10.5</sdo.version>
     <commons-io.version>2.8.0</commons-io.version>
     <commons-dbcp2.version>2.8.0</commons-dbcp2.version>
     <commons-fileupload.version>1.4</commons-fileupload.version>
