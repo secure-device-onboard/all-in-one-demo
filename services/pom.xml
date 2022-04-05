@@ -29,7 +29,7 @@
     <json.version>20210307</json.version>
     <slf4j-api.version>1.7.30</slf4j-api.version>
     <spring-test.version>5.3.15</spring-test.version>
-    <spring-core.version>5.3.15</spring-core.version>
+    <spring-core.version>5.3.18</spring-core.version>
     <junit-jupiter.version>5.7.2</junit-jupiter.version>
     <mockito-all.version>1.10.19</mockito-all.version>
   </properties>
