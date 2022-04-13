@@ -1,3 +1,5 @@
+***Note:***  The support for this product will be discontinued from Dec 1, 2022. We recommend users to switch to FDO components (https://github.com/secure-device-onboard/pri-fidoiot).
+
 # About
 
 The Secure Device Onboard All-In-One demo is designed to run different Secure Device Onboard
