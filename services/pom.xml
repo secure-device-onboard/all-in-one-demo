@@ -24,12 +24,12 @@
   </parent>
 
   <properties>
-    <tomcat.version>9.0.60</tomcat.version>
-    <h2.version>2.1.210</h2.version>
+    <tomcat.version>9.0.68</tomcat.version>
+    <h2.version>2.1.214</h2.version>
     <json.version>20210307</json.version>
     <slf4j-api.version>1.7.30</slf4j-api.version>
-    <spring-test.version>5.3.18</spring-test.version>
-    <spring-core.version>5.3.18</spring-core.version>
+    <spring-test.version>5.3.20</spring-test.version>
+    <spring-core.version>5.3.20</spring-core.version>
     <junit-jupiter.version>5.7.2</junit-jupiter.version>
     <mockito-all.version>1.10.19</mockito-all.version>
   </properties>

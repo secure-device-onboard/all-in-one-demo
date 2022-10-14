@@ -24,7 +24,7 @@ node('ubuntu18.04-OnDemand'){
       sh 'cd $WORKSPACE/pri; git checkout master; mvn clean install'
       sh 'cd $WORKSPACE/iot-platform-sdk; git checkout master; mvn clean install'
       sh 'cd $WORKSPACE/supply-chain-tools; git checkout master; mvn clean install'
-      sh 'cd $WORKSPACE/rendezvous-service; git checkout master; mvn clean install'
+      sh 'cd $WORKSPACE/rendezvous-service; git checkout master; mvn clean install -Dmaven.test.skip=true'
       sh 'cd $WORKSPACE/all-in-one-demo; mvn clean install'
       print "Archive the artifacts"
       archiveArtifacts artifacts: 'all-in-one-demo/demo/aio.tar.gz', fingerprint: true, allowEmptyArchive: false
