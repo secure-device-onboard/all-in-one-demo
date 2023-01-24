@@ -24,7 +24,7 @@
   </parent>
 
   <properties>
-    <tomcat.version>9.0.68</tomcat.version>
+    <tomcat.version>9.0.71</tomcat.version>
     <h2.version>2.1.214</h2.version>
     <json.version>20210307</json.version>
     <slf4j-api.version>1.7.30</slf4j-api.version>
