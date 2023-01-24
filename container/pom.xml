@@ -25,7 +25,7 @@
     <json.version>20210307</json.version>
     <slf4j-api.version>1.7.30</slf4j-api.version>
     <slf4j-simple.version>1.7.30</slf4j-simple.version>
-    <tomcat.version>9.0.68</tomcat.version>
+    <tomcat.version>9.0.71</tomcat.version>
     <rendezvous.war>rendezvous-${sdo.version}.war</rendezvous.war>
     <rvservice.war>rendezvous-service-${sdo.version}.war</rvservice.war>
     <manufacturer.war>manufacturer-webapp-${sdo.version}.war</manufacturer.war>
