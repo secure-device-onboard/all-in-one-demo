@@ -12,7 +12,7 @@ different client implementations.
 The following are the system constraints for the All-in-One demo.
 - Operating System: Ubuntu* 20.04
 - Java* Runtime Environment 11
-- Docker 18.09
+- Docker 19.03.15
 - Docker compose 1.21.2
 - Haveged
 - Postman (Optional) to execute REST calls

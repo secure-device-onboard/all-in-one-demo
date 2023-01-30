@@ -16,7 +16,7 @@ The following are the system constraints for the All-in-One demo.
 - Java* Development Kit 11
 - Apache Maven* 3.5.4 (Optional) software for building the demo from source
 - Java IDE (Optional) for convenience in modifying the source code
-- Docker 18.09
+- Docker 19.03.15
 - Docker compose 1.21.2
 - Haveged
 
