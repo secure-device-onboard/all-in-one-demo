@@ -1,4 +1,4 @@
-***Note:***  The support for this product has been discontinued from Mar 31, 2023. We recommend users to switch to FDO components (https://github.com/secure-device-onboard/pri-fidoiot).
+***Note:***  The support for this product has been discontinued from Mar 31, 2023. FIDO Device Onboard (FDO) is functionally compatible with Secure Device Onboard (SDO). We recommend users to switch to FDO components (https://github.com/secure-device-onboard/pri-fidoiot).
 
 # About
 
